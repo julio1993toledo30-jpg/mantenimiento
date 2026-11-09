@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="2026-11-09.21">
+<meta name="app-version" content="2026-11-09.22">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -106,25 +106,25 @@ td.n,th.n{text-align:right}
 #nav button{flex:1;background:none;border:0;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;padding:4px 0}
 #nav button.on{color:var(--ac);font-weight:800}
 #nav svg{stroke:currentColor}
-#pr{display:none}
+#prt{display:none}
 @page{size:A4;margin:0}
 @media print{
 body>.w{display:none!important}
 body{background:#fff}
-#pr{display:block;padding:14mm;color:#000;font:400 13px/1.4 Archivo,Arial,sans-serif}
-#pr .hd{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #c8641f;border-top:0;background:none;padding:0 0 8px;margin-bottom:12px}
-#pr .hd img{width:54px;height:auto!important}
-#pr .hd div{text-align:right}
-#pr h1{font-size:22px;margin:0;letter-spacing:0}
-#pr h2{font-size:14px;margin:14px 0 4px;border-bottom:1px solid #999;padding-bottom:2px}
-#pr table{width:100%;border-collapse:collapse;font-size:13px}
-#pr td,#pr th{border:1px solid #999;padding:4px 6px;text-align:left;color:#000}
-#pr td.k{width:28%;font-weight:700;background:#f1f1f1}
-#pr .tx{white-space:pre-wrap;border:1px solid #999;padding:6px;min-height:34px}
-#pr .fm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:70px;page-break-inside:avoid}
-#pr .fm div{border-top:1px solid #000;padding-top:4px;text-align:center;font-size:12px}
+#prt{display:block;padding:14mm;color:#000;font:400 13px/1.4 Archivo,Arial,sans-serif}
+#prt .hd{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #c8641f;border-top:0;background:none;padding:0 0 8px;margin-bottom:12px}
+#prt .hd img{width:54px;height:auto!important}
+#prt .hd div{text-align:right}
+#prt h1{font-size:22px;margin:0;letter-spacing:0}
+#prt h2{font-size:14px;margin:14px 0 4px;border-bottom:1px solid #999;padding-bottom:2px}
+#prt table{width:100%;border-collapse:collapse;font-size:13px}
+#prt td,#prt th{border:1px solid #999;padding:4px 6px;text-align:left;color:#000}
+#prt td.k{width:28%;font-weight:700;background:#f1f1f1}
+#prt .tx{white-space:pre-wrap;border:1px solid #999;padding:6px;min-height:34px}
+#prt .fm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:70px;page-break-inside:avoid}
+#prt .fm div{border-top:1px solid #000;padding-top:4px;text-align:center;font-size:12px}
 }
-#pr .fo img{width:46mm;height:auto;border:1px solid #999;margin:0 2mm 2mm 0}
+#prt .fo img{width:46mm;height:auto;border:1px solid #999;margin:0 2mm 2mm 0}
 .bc{background:var(--sf);border:1px dashed #5A636D;border-radius:12px;padding:12px;margin-bottom:10px}.bc h3{margin:0 0 4px;font-size:15px}.chs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chs button{background:var(--sf);color:var(--mu);border:1px solid var(--ln);border-radius:20px;padding:5px 12px;font:600 12px Archivo,sans-serif;min-height:34px;cursor:pointer}.chs button.on{background:#E08A2E26;color:var(--ac);border-color:#E08A2E88;font-weight:800}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 #lgn{position:fixed;inset:0;z-index:100;background:var(--bg);overflow:auto;display:flex;align-items:center;justify-content:center;padding:20px}#lgn[hidden]{display:none}#lgn .bx{width:100%;max-width:380px;margin:0}#lgn h1{margin:8px 0 4px;font-size:26px}#lgM{color:#F0A8A0;min-height:22px;font-size:14px;margin-top:6px}
@@ -583,7 +583,7 @@ body{background:#fff}
 <button data-v="v5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg>Más</button>
 </div></nav>
 </div>
-<div id="pr"></div>
+<div id="prt"></div>
 <script>
 (function(){function w(t){var e=document.getElementById('lgW');if(e&&/Cargando|Sigue/.test(e.textContent)){e.textContent=t;e.style.color='#D17F78'}}
 window.addEventListener('error',function(e){w(e.target&&e.target.tagName==='SCRIPT'?'No se pudo cargar un componente. Revise la conexión y vuelva a abrir.':'Error: '+(e.message||'')+' (línea '+(e.lineno||'?')+')')},true);
@@ -787,9 +787,9 @@ function printOT(t){
  h+='<h2>Repuestos a pedir</h2>'+rp(t.pedir);
  h+='<h2>Feedback / tarea realizada</h2><div class="tx">'+(esc(t.fb)||'—')+'</div>';
  h+='<div class="fm"><div>Firma</div><div>Aclaración</div><div>Fecha</div></div>';
- $('pr').innerHTML=h;
+ $('prt').innerHTML=h;
  var old=document.title;document.title=(t.ot?fmt(t.ot):'Orden de trabajo');
- window.onafterprint=function(){document.title=old;$('pr').innerHTML='';window.onafterprint=null};
+ window.onafterprint=function(){document.title=old;$('prt').innerHTML='';window.onafterprint=null};
  setTimeout(function(){window.print()},150);
 }
 var recs=[],genBusy=false,rReady=false,delR=null,SU1={d:'día',w:'semana',m:'mes'},SUN={d:'días',w:'semanas',m:'meses'};
@@ -1062,7 +1062,7 @@ $('sP').onclick=function(){
  var x='<div class="hd"><img src="'+LOGO+'" alt="Logo"><div><h1>HORAS EXTRA</h1><b>'+dmy(d)+' al '+dmy(h)+'</b></div></div>';
  x+=ex.length?'<table><tr><th>Técnico</th><th>Fecha</th><th>Turno</th><th>Horas</th><th>Motivo</th><th>OT</th><th>Autorizó</th></tr>'+ex.map(function(j){return '<tr><td>'+esc(j.resp)+'</td><td>'+dmy(j.desde)+'</td><td>'+esc(j.turno)+'</td><td>'+fh(j.horas)+'</td><td>'+esc(j.motivo)+'</td><td>'+esc(j.ot||'')+'</td><td>'+esc(j.aut||'')+'</td></tr>'}).join('')+'<tr><td colspan="3"><b>Total</b></td><td colspan="4"><b>'+fh(tot)+' h</b></td></tr></table>':'<div class="tx">No hay horas extra registradas en ese período.</div>';
  x+='<div class="fm"><div>Firma</div><div>Aclaración</div><div>Fecha</div></div>';
- $('pr').innerHTML=x;var old=document.title;document.title='Horas extra '+d+' al '+h;window.onafterprint=function(){document.title=old;$('pr').innerHTML='';window.onafterprint=null};setTimeout(function(){window.print()},150);
+ $('prt').innerHTML=x;var old=document.title;document.title='Horas extra '+d+' al '+h;window.onafterprint=function(){document.title=old;$('prt').innerHTML='';window.onafterprint=null};setTimeout(function(){window.print()},150);
 };
 $('rsD').onchange=$('rsH').onchange=renderRes;
 $('jT').addEventListener('click',function(e){var b=e.target.closest('button');if(b)jtabSet(b.dataset.jt)});
@@ -1303,7 +1303,7 @@ $('pvP').onclick=function(){
  x+='<h2>Ítems</h2><table><tr><th>Ítem</th><th>Descripción</th><th>OT</th><th>Cant.</th></tr>'+(p.items||[]).map(function(i){return '<tr><td>'+esc(i.n)+'</td><td>'+esc(i.d)+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'')+'</td><td>'+esc(i.q)+'</td></tr>'}).join('')+'</table>';
  if((p.fotos||[]).length)x+='<h2>Fotos</h2><div class="fo">'+p.fotos.map(function(u){return '<img alt="Foto" src="'+u+'">'}).join('')+'</div>';
  x+='<div class="fm"><div>Firma</div><div>Aclaración</div><div>Fecha</div></div>';
- $('pr').innerHTML=x;var old=document.title;document.title='Pedido '+fmtP(p.num);window.onafterprint=function(){document.title=old;$('pr').innerHTML='';window.onafterprint=null};setTimeout(function(){window.print()},150);
+ $('prt').innerHTML=x;var old=document.title;document.title='Pedido '+fmtP(p.num);window.onafterprint=function(){document.title=old;$('prt').innerHTML='';window.onafterprint=null};setTimeout(function(){window.print()},150);
 };
 
 var cams=[],cdArm=null;
