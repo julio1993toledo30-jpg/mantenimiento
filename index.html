@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="2026-11-10.41">
+<meta name="app-version" content="2026-11-10.42">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -415,9 +415,9 @@ body{background:#fff}
 <div class="lgq"><b class="rq">*</b> Obligatorio.</div>
 <label>Quién informa <b class="rq">*</b><select id="nW"></select></label>
 <label>Qué se notó <b class="rq">*</b><input id="nTi" placeholder="Ej.: Mangueras de aire gastadas"></label>
-<label>Sector <b class="rq">*</b><input id="nSe" placeholder="Ej.: Producción, Taller" list="dlSe"></label>
+<label>Área <b class="rq">*</b><input id="nSe" placeholder="Ej.: Producción, Taller" list="dlSe"></label>
 <datalist id="dlSe"></datalist>
-<label>Equipo <b class="rq">*</b><input id="nEq" placeholder="Ej.: Prensa 2"></label>
+<label>Sector / Equipo <b class="rq">*</b><input id="nEq" placeholder="Ej.: Prensa 2"></label>
 <label>Detalle <b class="rq">*</b><textarea id="nDe" rows="3" placeholder="Qué se vio y desde cuándo"></textarea></label>
 <div class="sec">Fotos <small>(opcional)</small></div>
 <div class="fb"><label class="btn g s">Tomar foto<input type="file" id="nFc" data-ph="n" accept="image/*" capture="environment"></label><label class="btn g s">Elegir de la galería<input type="file" id="nFo" data-ph="n" accept="image/*" multiple></label></div>
@@ -610,7 +610,7 @@ body{background:#fff}
 </div>
 <div class="g3">
 <label>Área <b class="rq">*</b><input id="fAr" list="dlAr" placeholder="Ej.: Producción" autocomplete="off"></label>
-<label>Equipo <b class="rq">*</b><input id="fEq" placeholder="Ej.: Compresor 2"></label>
+<label>Sector / Equipo <b class="rq">*</b><input id="fEq" placeholder="Ej.: Compresor 2"></label>
 <label>Parte <b class="rq">*</b><input id="fPa" placeholder="Ej.: Motor"></label>
 </div>
 <datalist id="dlAr"></datalist>
@@ -625,7 +625,7 @@ body{background:#fff}
 <div class="g3">
 <label>Fecha <b class="rq">*</b><input type="date" id="fFe"></label>
 <label>Turno <b class="rq">*</b><select id="fTu"><option value="">Seleccionar</option><option>Mañana</option><option>Tarde</option><option>Noche</option></select></label>
-<label>Tiempo estimado (min) <b class="rq">*</b><input type="number" id="fEs" min="0" step="5" inputmode="numeric"></label>
+<label id="lEs">Tiempo estimado (min) <b class="rq">*</b><input type="number" id="fEs" min="0" step="5" inputmode="numeric"></label>
 </div>
 <label id="lHf" hidden>Hora aproximada de la falla <b class="rq">*</b><input type="time" id="fHf"></label>
 </div>
@@ -1100,10 +1100,14 @@ $('rS').onclick=function(){
  },function(e){$('rS').disabled=false;dbErr(e)});
 };
 $('bQ').onclick=function(){
- var w=me.nombre||'';
- setSel('qW',RESPONSABLES,w,'Seleccionar');['qTi','qEq','qDe','qPa','qRl','qFb'].forEach(function(i){$(i).value=''});$('qPr').value='media';
- qfotos=[];qphs();$('qFo').value='';$('qFc').value='';$('qMsg').textContent='';L.qparts=[];L.qpedir=[];rows('qparts');rows('qpedir');$('qHm').value='';$('qSt').value='hecha';$('qTu').value='';
- $('rp').hidden=true;$('qp').hidden=false;setSel('qMo',MOTIVOS,'','Seleccionar');$('qMoO').value='';togMo();$('qHf').value=hhmm();$('qp').scrollIntoView({block:'start'});$('qTi').focus();
+ $('rp').hidden=true;open(null);CNP=true;
+ $('pT').textContent='Correctivo no programado';
+ $('fTp').value='Correctivo no programado';$('fTp').disabled=true;
+ $('fFe').value=dstr(jd());$('fFe').disabled=true;
+ $('lEs').hidden=true;$('fEs').value='';
+ $('fTu').value=turnoNow();
+ var w=me&&me.nombre||'';if(w){$('fRe').value=w;acRender()}
+ $('fSt').value='hecha';togMo();tabSet(1);
 };
 $('qX').onclick=function(){$('qp').hidden=true};
 function warn(x){var m=$('err');m.textContent=x;m.hidden=false;clearTimeout(warn.t);warn.t=setTimeout(function(){m.hidden=true},5000)}
@@ -1131,7 +1135,9 @@ function rows(k){
 }
 function qphs(){$('qPh').innerHTML=qfotos.map(function(s,i){return '<div class="th"><img alt="Foto" src="'+fsrc(s)+'"><button data-xq="'+i+'" aria-label="Quitar foto">×</button></div>'}).join('')}
 function phs(){$('phF').innerHTML=fotos.map(function(s,i){return '<div class="th"><img alt="Foto" src="'+fsrc(s)+'"><button data-x="'+i+'" aria-label="Quitar foto">×</button></div>'}).join('')}
+var CNP=false;
 function open(t){
+ CNP=false;$('fTp').disabled=false;$('fFe').disabled=false;$('lEs').hidden=false;
  fromBor=null;retP=[];edit=t?t.id:null;eot=t?t.ot:null;$('pT').textContent=t?('Editar tarea'+(t.ot?' · '+fmt(t.ot):'')):'Nueva tarea';
  var v={fTi:'titulo',fEq:'equipo',fPa:'parte',fSp:'sub',fDe:'detalle',fEs:'est',fRl:'real',fTu:'turno',fFb:'fb',fCn:'contrNom'};
  for(var k in v)$(k).value=t?(t[v[k]]==null?'':t[v[k]]):'';
@@ -1202,17 +1208,17 @@ $('bS').onclick=function(){
  var rl=[['fTi','Tarea'],['fTp','Tipo de mantenimiento'],['fPr','Prioridad'],['fCr','Creada por'],['fRe','Responsable']];
  if($('fCt').checked)rl.push(['fCn','Nombre del contratista']);
  if($('fTp').value==='Correctivo no programado')rl.push(['fHf','Hora aproximada de la falla']);
- if($('fTp').value!=='Correctivo no programado')rl.push(['fAr','Área']);
- rl.push(['fTu','Turno'],['fEq','Equipo'],['fPa','Parte'],['fDe','Detalle de tarea'],['fSt','Estado'],['fFe','Fecha'],['fEs','Tiempo estimado',1]);
+ rl.push(['fAr','Área']);
+ rl.push(['fTu','Turno'],['fEq','Sector / Equipo'],['fPa','Parte'],['fDe','Detalle de tarea'],['fSt','Estado'],['fFe','Fecha']);if(!CNP)rl.push(['fEs','Tiempo estimado',1]);
  if(['incompleto','noreal'].indexOf($('fSt').value)>=0){rl.push(['fMo','Motivo']);if($('fMo').value==='Otro')rl.push(['fMoO','Descripción del motivo'])}
- if($('fSt').value!=='pendiente')rl.push(['fRl','Tiempo real'],['fFb','Feedback']);
+ if($('fSt').value!=='pendiente')rl.push(['fRl','Tiempo real',1],['fFb','Feedback']);
  if(!need(rl)){tabFor();return}
  var ak=$('fRe').value+'|'+$('fFe').value;
  if(metaFor($('fRe').value,$('fFe').value)===0&&absOk!==ak){absOk=ak;warn($('fRe').value+' figura ausente ese día. Si desea asignarle la tarea de todos modos, toque Guardar nuevamente.');return}
  var ti=$('fTi').value.trim();
  var ok=function(a){return a.filter(function(p){return String(p.n).trim()||String(p.d).trim()})};
  var ct=$('fCt').checked;
- var t={id:edit||Date.now(),titulo:ti,tipo:$('fTp').value,equipo:$('fEq').value.trim(),parte:$('fPa').value.trim(),sub:$('fSp').value.trim(),area:$('fAr').value.trim(),resp:$('fRe').value,acomp:AC.slice(),contr:ct,contrNom:ct?$('fCn').value.trim():'',detalle:$('fDe').value.trim(),prio:$('fPr').value,estado:$('fSt').value,fecha:$('fFe').value,est:$('fEs').value===''?'':(+$('fEs').value)/60,real:$('fRl').value===''?'':(+$('fRl').value)/60,turno:$('fTu').value,parts:ok(L.parts),horas:$('fHm').value===''?'':+$('fHm').value,pedir:ok(L.pedir),fb:$('fFb').value.trim(),fotos:fotos,cre:$('fCr').value,motivo:(['incompleto','noreal'].indexOf($('fSt').value)>=0?$('fMo').value:''),motivoOtro:(['incompleto','noreal'].indexOf($('fSt').value)>=0&&$('fMo').value==='Otro'?$('fMoO').value.trim():'')};
+ var t={id:edit||Date.now(),titulo:ti,tipo:$('fTp').value,equipo:$('fEq').value.trim(),parte:$('fPa').value.trim(),sub:$('fSp').value.trim(),area:$('fAr').value.trim(),resp:$('fRe').value,acomp:AC.slice(),contr:ct,contrNom:ct?$('fCn').value.trim():'',detalle:$('fDe').value.trim(),prio:$('fPr').value,estado:$('fSt').value,fecha:$('fFe').value,est:$('fEs').value===''?(CNP&&$('fRl').value!==''?(+$('fRl').value)/60:''):(+$('fEs').value)/60,real:$('fRl').value===''?'':(+$('fRl').value)/60,turno:$('fTu').value,parts:ok(L.parts),horas:$('fHm').value===''?'':+$('fHm').value,pedir:ok(L.pedir),fb:$('fFb').value.trim(),fotos:fotos,cre:$('fCr').value,motivo:(['incompleto','noreal'].indexOf($('fSt').value)>=0?$('fMo').value:''),motivoOtro:(['incompleto','noreal'].indexOf($('fSt').value)>=0&&$('fMo').value==='Otro'?$('fMoO').value.trim():'')};
  var ex=tasks.filter(function(x){return x.id===edit})[0];
  if(ex)['rev','revPor','revFec','revCom','hist'].forEach(function(k){if(ex[k]!==undefined)t[k]=ex[k]});
  if($('fTp').value==='Correctivo no programado'){t.horaFalla=$('fHf').value;t.horaCarga=(ex&&ex.horaCarga)||hhmm()}else if(ex){if(ex.horaFalla)t.horaFalla=ex.horaFalla;if(ex.horaCarga)t.horaCarga=ex.horaCarga}
@@ -1390,7 +1396,7 @@ function nextCnt(doc_,cb,btn){var r=doc(fdb,'config',doc_);runTransaction(fdb,as
 function abiertos(){return bors.filter(function(b){return ['convertido','descartado','completado'].indexOf(b.estado)<0})}
 /* --- novedad del técnico --- */
 $('nS').onclick=function(){
- if(!need([['nW','Quién informa'],['nTi','Qué se notó'],['nSe','Sector'],['nEq','Equipo'],['nDe','Detalle']]))return;
+ if(!need([['nW','Quién informa'],['nTi','Qué se notó'],['nSe','Área'],['nEq','Sector / Equipo'],['nDe','Detalle']]))return;
  if(JSON.stringify(FB.n).length>900000){warn('Las fotos ocupan demasiado espacio: quite alguna.');return}
  try{localStorage.setItem('mant-qw',$('nW').value)}catch(e){}
  var d={id:Date.now(),tipo:'nov',titulo:$('nTi').value.trim(),origen:'Relato de anomalía',fechaPed:dstr(jd()),pidio:$('nW').value,sector:$('nSe').value.trim(),equipo:$('nEq').value.trim(),prio:'media',estMin:'',detalle:$('nDe').value.trim(),fotos:FB.n.slice(),cre:$('nW').value,estado:'abierto'};
