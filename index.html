@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="2026-11-10.40">
+<meta name="app-version" content="2026-11-10.41">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -181,7 +181,7 @@ body{background:#fff}
 <select id="fR" aria-label="Filtrar por revisión"><option value="">Todas las revisiones</option><option value="revision">En revisión</option><option value="aprobada">Aprobadas</option><option value="rehacer">Desaprobada</option><option value="revisada">Revisada</option></select>
 <button class="btn g s" id="bL">Limpiar filtros</button>
 </div></details>
-<div class="lgd"><span><i style="background:#7FA3D1"></i>Preventivo</span><span><i style="background:#A592CC"></i>Predictivo</span><span><i style="background:#D0A868"></i>Corr. programado</span><span><i style="background:#D17F78"></i>Corr. no programado</span></div>
+<div class="lgd"><span><i style="background:#4FB477"></i>Preventivo</span><span><i style="background:#4F94E0"></i>Predictivo</span><span><i style="background:#E08A2E"></i>Corr. programado</span><span><i style="background:#E0524A"></i>Corr. no programado</span></div>
 <div id="list"></div>
 </section>
 
@@ -805,7 +805,7 @@ function sumF(){
  el.innerHTML=esc(r)+' ese día: ya asignado <b>'+ex+' min</b> + esta tarea <b>'+m+' min</b> = <b>'+tot+' / '+MT+' min</b> · '+(left>=0?'quedan <b>'+left+' min</b>':'<b style="color:var(--rd)">se excede en '+(-left)+' min</b>');
  el.style.borderLeftColor=left<0?'var(--rd)':'var(--ok)';
 }
-var TC={'Preventivo':'#7FA3D1','Predictivo':'#A592CC','Correctivo programado':'#D0A868','Correctivo no programado':'#D17F78'},SC={pendiente:'#D6B85F',hecha:'#78AD8B',noreal:'#9AA0A8',incompleto:'#D39563'},PC={baja:'#8FB59A',media:'#C9B574',alta:'#D39563',critica:'#D17F78'},SI={pendiente:'M12 7v5l3 2',hecha:'M5 12l5 5 9-10',noreal:'M6 6l12 12M18 6 6 18',incompleto:'M5 12h14'},openD={};
+var TC={'Preventivo':'#4FB477','Predictivo':'#4F94E0','Correctivo programado':'#E08A2E','Correctivo no programado':'#E0524A'},SC={pendiente:'#D6B85F',hecha:'#78AD8B',noreal:'#9AA0A8',incompleto:'#D39563'},PC={baja:'#8FB59A',media:'#C9B574',alta:'#D39563',critica:'#D17F78'},SI={pendiente:'M12 7v5l3 2',hecha:'M5 12l5 5 9-10',noreal:'M6 6l12 12M18 6 6 18',incompleto:'M5 12h14'},openD={};
 function chp(c,x,p){return '<span class="tg" style="color:'+c+';background:'+c+'26;border-color:'+c+'55">'+(p?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
 function nPed(t){return (t.pedir||[]).filter(function(p){return p.n&&!p.ok}).length}
 function canE(t){return !!me&&!!me.rol&&(me.rol==='supervisor'||t.resp===me.nombre)}
@@ -1738,7 +1738,7 @@ $('pwS').onclick=function(){
 $('pTp').addEventListener('change',function(){$('lPtO').hidden=$('pTp').value!=='Otro'});
 
 /* --- v.17: notificaciones, cambio de turno, volver abajo --- */
-var notas=[],nots=[],ctDay='';
+var notas=[],nots=[],ctDay='',CTT=(function(){var t=turnoNow();return t==='Tarde'?'Mañana':t==='Noche'?'Tarde':'Noche'})();
 function notify(para,texto){if(!para)return;var id=Date.now()+Math.floor(Math.random()*1000);setDoc(doc(fdb,'notifs',String(id)),{id:id,para:para,texto:texto,fecha:dstr(jd())+' '+hhmm(),leida:false}).catch(function(){})}
 function mine(){return nots.filter(function(n){return n.para===me.nombre}).sort(function(a,b){return b.id-a.id})}
 function updNT(){var n=mine().filter(function(x){return !x.leida}).length;$('ntB').innerHTML=n?'<span class="tg" style="color:#D6B85F;background:#D6B85F26;border-color:#D6B85F55">'+n+(n===1?' nueva':' nuevas')+'</span>':'';if(!$('nt').hidden)renderNT()}
@@ -1752,7 +1752,9 @@ function renderCT(){
  var d=ctDay||dstr(jd());
  $('ctD').innerHTML=ctDays().map(function(x){return '<option value="'+x+'"'+(x===d?' selected':'')+'>'+(x===dstr(jd())?'Hoy · ':'')+dmy(x)+'</option>'}).join('');
  var sup=me.rol==='supervisor';
- $('ctL').innerHTML=TP.map(function(t){
+ var unr=function(k){return notas.filter(function(x){return x.dia===d&&x.paso===k&&x.por!==me.nombre&&!(x.lect||{})[me.nombre]}).length};
+ var bar='<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">'+TP.map(function(t){var on=t[0]===CTT,u=unr(t[0]);return '<button type="button" data-ctt="'+t[0]+'" style="flex:1;min-width:100px;min-height:46px;border-radius:10px;font-weight:800;font-size:13px;border:1px solid '+(on?'#7FA3D1':'var(--ln)')+';background:'+(on?'#7FA3D133':'var(--sf)')+';color:'+(on?'var(--ink)':'#C3C9D1')+'">'+t[1]+(u?' <span style="color:#E0524A">· '+u+(u===1?' sin leer':' sin leer')+'</span>':'')+'</button>'}).join('')+'</div>';
+ $('ctL').innerHTML=bar+TP.filter(function(t){return t[0]===CTT}).map(function(t){
   var ns=notas.filter(function(x){return x.dia===d&&x.paso===t[0]}).sort(function(a,b){return a.id-b.id});
   var inc=tasks.filter(function(x){return x.tipo==='Correctivo no programado'&&x.estado==='incompleto'&&x.fecha===d&&x.turno===t[0]});
   var h='<div class="box" style="margin-bottom:12px"><b>'+t[1]+'</b>';
@@ -1769,7 +1771,8 @@ function renderCT(){
   if(!ns.length&&!inc.length)h+='<div class="mt" style="margin-top:6px">Sin novedades.</div>';
   return h+'</div>'}).join('');
 }
-$('bCt').onclick=function(){ctDay='';renderCT();$('ctT').value=turnoNow();$('ctX').value='';$('ct').hidden=false};
+$('bCt').onclick=function(){ctDay='';var tn=turnoNow();CTT=tn==='Tarde'?'Mañana':tn==='Noche'?'Tarde':'Noche';renderCT();$('ctT').value=turnoNow();$('ctX').value='';$('ct').hidden=false};
+$('ctL').addEventListener('click',function(e){var t=e.target.closest('[data-ctt]');if(t){CTT=t.dataset.ctt;renderCT()}});
 $('ctD').onchange=function(){ctDay=$('ctD').value;renderCT()};
 function ctStep(k){var a=ctDays(),i=a.indexOf(ctDay||a[0])+k;if(i>=0&&i<a.length){ctDay=a[i];renderCT()}}
 $('ctP').onclick=function(){ctStep(1)};$('ctN').onclick=function(){ctStep(-1)};
