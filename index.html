@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="2026-11-10.37">
+<meta name="app-version" content="2026-11-10.39">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -32,9 +32,10 @@ select option{background:var(--sf)}
 .act b{display:block;font-size:17px}.act span.d{font-size:13px;color:var(--mu)}
 .act.red{background:#C4574F;border-color:#C4574F;color:#fff;min-height:64px}.act.red span.d{color:#fff;opacity:.95}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.st{background:var(--sf);border:1px solid var(--ln);padding:10px 12px;border-radius:10px}
-.st b{display:block;font-size:22px;font-weight:800}
-.st span{font-size:12px;color:var(--mu)}
+.stats{gap:6px}
+.st{background:var(--sf);border:1px solid var(--ln);padding:6px 8px;border-radius:10px;text-align:left;color:inherit;font:inherit;cursor:pointer;min-height:44px}
+.st b{display:block;font-size:16px;font-weight:800;line-height:1.2}
+.st span{font-size:11px;color:var(--mu)}
 .box{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:14px;margin-bottom:14px}
 .box h2{margin:0 0 10px;font-size:15px}
 .hh{font-size:15px;font-weight:800;margin:6px 0 8px}
@@ -95,7 +96,7 @@ td,th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--ln)}
 td.n,th.n{text-align:right}
 .ac{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .em{text-align:center;color:var(--mu);padding:26px 10px;border:1px dashed var(--ln);border-radius:10px;margin-bottom:10px}
-@media(max-width:520px){.g2,.g3{grid-template-columns:1fr}.st b{font-size:18px}}
+@media(max-width:520px){.g2,.g3{grid-template-columns:1fr}.st b{font-size:16px}}
 .rl{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--ln);border-radius:10px;padding:8px 10px;margin-bottom:8px}.rl>div:first-child{min-width:0}.rl .mt{margin:0}
 .sm{background:var(--bg);border:1px solid var(--ln);border-left:5px solid var(--ln);border-radius:8px;padding:10px 12px;margin:4px 0 8px;font-size:14px}
 .lr{display:grid;grid-template-columns:128px 1fr 112px;gap:8px;align-items:center;margin-bottom:8px;font-size:14px}.lr b{text-align:right}.bar{height:10px;background:var(--bg);border-radius:5px;overflow:hidden}.bar i{display:block;height:100%}
@@ -150,12 +151,12 @@ body{background:#fff}
 <button class="act" id="bNv"><div class="ic" style="background:#9AA0A826"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C3C9D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M9 13h6M9 17h4"/></svg></div><div><b>Relato de anomalía</b><span class="d">Informar algo que notó y ver los relatos enviados</span></div><span id="nlB" style="margin-left:auto"></span></button>
 <div id="rhz"></div>
 <div class="stats">
-<div class="st"><b id="sD">0</b><span>Tareas de hoy</span></div>
-<div class="st"><b id="sA">0</b><span>Tareas abiertas</span></div>
-<div class="st"><b id="sK">0</b><span>Cerradas hoy</span></div>
-<div class="st"><b id="sP">0</b><span>Para revisar</span></div>
-<div class="st"><b id="sC">0</b><span>Repuestos a pedir</span></div>
-<div class="st"><b id="sH">0 min</b><span>Min. estimados</span></div>
+<button type="button" class="st" data-go="hoy"><b id="sD">0</b><span>De hoy</span></button>
+<button type="button" class="st" data-go="abiertas"><b id="sA">0</b><span>Abiertas</span></button>
+<button type="button" class="st" data-go="cerradas"><b id="sK">0</b><span>Cerradas hoy</span></button>
+<button type="button" class="st" data-go="revisar"><b id="sP">0</b><span>Para revisar</span></button>
+<button type="button" class="st" data-go="pedir"><b id="sC">0</b><span>Repuestos a pedir</span></button>
+<button type="button" class="st" data-go="minutos"><b id="sH">0 min</b><span>Min. por hacer</span></button>
 </div>
 <div class="box" id="ld"></div>
 <div id="tAv"></div>
@@ -171,7 +172,7 @@ body{background:#fff}
 <details class="fl2"><summary><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4-2v-4L3 5z"/></svg><span id="fN">Filtros</span></summary>
 <div class="flt">
 <select id="fT" aria-label="Filtrar por técnico"></select>
-<select id="fE" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="pendiente">Pendientes</option><option value="hecha">Realizadas</option><option value="noreal">No realizadas</option><option value="incompleto">Incompletas</option></select>
+<select id="fE" aria-label="Filtrar por estado"><option value="">Todos los estados</option><option value="abiertas">Abiertas (pendientes e incompletas)</option><option value="conped">Con repuestos a pedir</option><option value="pendiente">Pendientes</option><option value="hecha">Realizadas</option><option value="noreal">No realizadas</option><option value="incompleto">Incompletas</option></select>
 <select id="fU" aria-label="Filtrar por turno"><option value="">Todos los turnos</option><option>Mañana</option><option>Tarde</option><option>Noche</option></select>
 <input type="date" id="fD" aria-label="Filtrar por fecha">
 <select id="fY" aria-label="Filtrar por tipo de mantenimiento"></select>
@@ -363,7 +364,7 @@ body{background:#fff}
 <div class="g2"><label>Desde<input type="date" id="rsD"></label><label>Hasta<input type="date" id="rsH"></label></div>
 <div id="sB"></div>
 <div class="ac" style="margin:0 0 6px"><button class="btn g s" id="q1">Quincena 1 (1 al 15)</button><button class="btn g s" id="q2">Quincena 2 (16 a fin de mes)</button></div>
-<div class="ac"><button class="btn s" id="sC2">Copiar para correo</button><button class="btn g s" id="sP">Imprimir / PDF</button></div></div>
+<div class="ac"><button class="btn s" id="sC2">Copiar para correo</button><button class="btn g s" id="sPr">Imprimir / PDF</button></div></div>
 </div>
 
 <div class="pan" id="ct" hidden>
@@ -403,7 +404,7 @@ body{background:#fff}
 <h2>Relato de anomalía</h2>
 <div class="ac" style="margin-bottom:12px"><button class="btn" id="nNew">Nuevo relato</button></div>
 <div class="sec">Relatos enviados</div>
-<div class="mt" style="margin-bottom:12px">Acá se ve cómo avanza cada relato: Nuevo, En proceso (con su número de OT y los repuestos) y Completado. Tocá cada sección para abrirla o cerrarla.</div>
+<div class="mt" style="margin-bottom:12px">Acá se ve cómo avanza cada relato: Nuevo, En proceso (con su número de OT y los repuestos) y Completado. Tocá la solapa Nuevos, En proceso o Completados para ver cada grupo.</div>
 <div id="nlL"></div>
 </div>
 
@@ -856,7 +857,7 @@ function render(){
  $('fN').textContent='Filtros'+(nf?' ('+nf+')':'');
  var ts=tasks.filter(function(t){
   if(q){var okq=/^\d+$/.test(qd)?String(t.ot||'').padStart(4,'0').indexOf(qd)>=0:[t.titulo,t.equipo,t.resp,t.detalle].join(' ').toLowerCase().indexOf(q)>=0;if(!okq)return false}
-  return (!f[0]||t.resp===f[0])&&(!f[1]||t.estado===f[1])&&(!f[2]||t.turno===f[2])&&(!f[3]||t.fecha===f[3])&&(!f[4]||t.tipo===f[4])&&(!f[5]||t.cre===f[5])&&(!f[6]||(t.fecha&&wkey(t.fecha)===f[6]))&&(!f[7]||(t.rev||'')===f[7])});
+  return (!f[0]||t.resp===f[0])&&(!f[1]||(f[1]==='abiertas'?isOpen(t):f[1]==='conped'?nPed(t)>0:t.estado===f[1]))&&(!f[2]||t.turno===f[2])&&(!f[3]||t.fecha===f[3])&&(!f[4]||t.tipo===f[4])&&(!f[5]||t.cre===f[5])&&(!f[6]||(t.fecha&&wkey(t.fecha)===f[6]))&&(!f[7]||(t.rev||'')===f[7])});
  ts.sort(srt);
  if(!ts.length){$('list').innerHTML='<div class="em">'+(tasks.length?'No hay tareas con esa búsqueda o esos filtros.':'Todavía no hay tareas. Puede cargar la primera desde Planificar.')+'</div>';return}
  $('list').innerHTML=ts.map(cardH).join('');
@@ -1271,7 +1272,7 @@ function renderRes(){
 }
 function copyTxt(t){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(t);return new Promise(function(ok,no){var a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy')?ok():no()}catch(e){no()}a.remove()})}
 $('sC2').onclick=function(){copyTxt(resTxt()).then(function(){msg('Texto copiado. Ya puede pegarlo en el correo.')},function(){warn('No se pudo copiar. Intente desde la página publicada.')})};
-$('sP').onclick=function(){
+$('sPr').onclick=function(){
  var d=$('rsD').value,h=$('rsH').value,ex=extras(d,h),tot=0;ex.forEach(function(j){tot+=j.horas});
  var x='<div class="hd"><img src="'+LOGO+'" alt="Logo"><div><h1>HORAS EXTRA</h1><b>'+dmy(d)+' al '+dmy(h)+'</b></div></div>';
  x+=ex.length?'<table><tr><th>Técnico</th><th>Fecha</th><th>Turno</th><th>Horas</th><th>Motivo</th><th>OT</th><th>Autorizó</th></tr>'+ex.map(function(j){return '<tr><td>'+esc(j.resp)+'</td><td>'+dmy(j.desde)+'</td><td>'+esc(j.turno)+'</td><td>'+fh(j.horas)+'</td><td>'+esc(j.motivo)+'</td><td>'+esc(j.ot||'')+'</td><td>'+esc(j.aut||'')+'</td></tr>'}).join('')+'<tr><td colspan="3"><b>Total</b></td><td colspan="4"><b>'+fh(tot)+' h</b></td></tr></table>':'<div class="tx">No hay horas extra registradas en ese período.</div>';
@@ -1601,6 +1602,16 @@ function dashRC(){
  return '<div class="dc"><h3>Repuestos cambiados</h3><div class="kp"><div><b>'+cs.length+'</b><span>Cambios</span></div><div><b>'+u+'</b><span>Unidades</span></div><div><b>'+Object.keys(eqs).length+'</b><span>Equipos</span></div><div><b>'+hh+'</b><span>Con horas de máquina</span></div></div>'+
   '<div class="lg">Equipos con más cambios</div>'+bars(top(ce),'var(--ac)')+'<div class="lg" style="margin-top:10px">Repuestos más cambiados (unidades)</div>'+bars(top(cr,function(v){return v})  ,'#7FA3D1')+'<div class="lg" style="margin-top:10px">De dónde salieron</div>'+bars([['Pedido',co.Pedido],['Stock',co.Stock]],'var(--ok)')+'<div class="ac"><button class="btn g" id="dRc">Ver todos los repuestos cambiados</button></div></div>'}
 var VW=['v1','v2','v3','dp','v5'];
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-go]');if(!b)return;var g=b.getAttribute('data-go');
+ if(g==='revisar'&&me&&me.rol==='supervisor'){show('v3');$('bV').click();return}
+ ['fT','fE','fU','fD','fY','fK','fW','fR','fQ'].forEach(function(i){$(i).value=''});
+ var hy=dstr(jd());
+ if(g==='hoy')$('fD').value=hy;
+ else if(g==='abiertas'||g==='minutos')$('fE').value='abiertas';
+ else if(g==='cerradas'){$('fE').value='hecha';$('fD').value=hy}
+ else if(g==='revisar')$('fR').value='revision';
+ else if(g==='pedir')$('fE').value='conped';
+ show('v2');render();var d=document.querySelector('#v2 .fl2');if(d)d.open=false});
 function show(id){
  VW.forEach(function(x){$(x).hidden=x!==id});
  [].forEach.call(document.querySelectorAll('#nav button'),function(b){b.classList.toggle('on',b.dataset.v===id)});
@@ -1637,7 +1648,7 @@ render();
 
 var pres=[];
 function updNL(){var n=bors.filter(function(b){return b.tipo==='nov'&&b.estado==='abierto'}).length;$('nlB').innerHTML=n?'<span class="tg" style="color:#D6B85F;background:#D6B85F26;border-color:#D6B85F55">'+n+(n===1?' abierta':' abiertas')+'</span>':'';if(!$('nl').hidden)renderNL()}
-var NLO={};
+var NLO={},NLT='Nuevo';
 function renderNL(){
  var sup=me&&me.rol==='supervisor',ord={'Nuevo':0,'En proceso':1};
  var l=bors.filter(function(b){return b.tipo==='nov'}).sort(function(a,b){var x=ord[relEst(a).t],y=ord[relEst(b).t];return (x==null?2:x)-(y==null?2:y)||b.id-a.id});
@@ -1649,11 +1660,14 @@ function renderNL(){
   +'<input id="rsp'+b.id+'" placeholder="Escribir un avance o comentario" style="margin-top:8px"><div class="ac"><button class="btn g s" data-rs="'+b.id+'">Comentar</button>'
   +(sup&&b.estado==='abierto'?'<button class="btn s" data-rg="'+b.id+'">Generar orden de trabajo</button><button class="btn g s" data-rc="'+b.id+'">Completar sin OT</button><button class="btn g s d" data-rd="'+b.id+'">Descartar</button>':'')
   +(sup?'<button class="btn g s d" data-rx="'+b.id+'">Borrar</button>':'')+'</div></div>'};
- var G=[['Nuevo','Nuevos','#B9C0C9',1],['En proceso','En proceso','#D6B85F',1],['Completado','Completados','#78AD8B',0],['Descartado','Descartados','#9AA0A8',0]];
- $('nlL').innerHTML=l.length?G.map(function(g){var m=l.filter(function(b){return relEst(b).t===g[0]});if(!m.length&&!g[3])return '';var op=NLO[g[0]]!==undefined?NLO[g[0]]:g[3];
-  return '<details data-g="'+g[0]+'" style="margin-bottom:14px"'+(op?' open':'')+'><summary style="cursor:pointer;font-weight:800;font-size:15px;padding:8px 0;list-style:none"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+g[2]+';margin-right:8px"></span>'+g[1]+' <span class="mt" style="font-weight:600">('+m.length+')</span></summary>'+(m.length?m.map(cardF).join(''):'<div class="em">No hay relatos.</div>')+'</details>'}).join(''):'<div class="em">Todavía no hay relatos enviados.</div>';
+ var G=[['Nuevo','Nuevos','#B9C0C9',1],['En proceso','En proceso','#D6B85F',1],['Completado','Completados','#78AD8B',1],['Descartado','Descartados','#9AA0A8',0]];
+ var tb=function(g){return l.filter(function(b){return relEst(b).t===g[0]})},cur=NLT;
+ if(!G.some(function(g){return g[0]===cur&&(g[3]||tb(g).length)}))cur='Nuevo';
+ var bar='<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">'+G.filter(function(g){return g[3]||tb(g).length}).map(function(g){var on=g[0]===cur;return '<button type="button" data-nt="'+g[0]+'" style="flex:1;min-width:92px;min-height:46px;border-radius:10px;font-weight:800;font-size:13px;border:1px solid '+(on?g[2]:'var(--ln)')+';background:'+(on?g[2]+'33':'var(--sf)')+';color:'+(on?'var(--ink)':'#C3C9D1')+'"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+g[2]+';margin-right:6px"></span>'+g[1]+' ('+tb(g).length+')</button>'}).join('')+'</div>';
+ var m=tb(G.filter(function(g){return g[0]===cur})[0]);
+ $('nlL').innerHTML=l.length?bar+(m.length?m.map(cardF).join(''):'<div class="em">No hay relatos en esta sección.</div>'):'<div class="em">Todavía no hay relatos enviados.</div>';
  for(var k in keep){var el=$(k);if(el)el.value=keep[k]}}
-$('nlL').addEventListener('toggle',function(e){var d=e.target;if(d.dataset&&d.dataset.g)NLO[d.dataset.g]=d.open},true);
+$('nlL').addEventListener('click',function(e){var t=e.target.closest('[data-nt]');if(t){NLT=t.dataset.nt;renderNL()}});
 $('nlL').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
  var id=b.dataset.rs||b.dataset.rg||b.dataset.rx||b.dataset.rc||b.dataset.rd;var bo=bors.filter(function(x){return String(x.id)===id})[0];if(!bo)return;
  if(b.dataset.rg){openCp(bo);return}
