@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="2026-11-10.34">
+<meta name="app-version" content="2026-11-10.35">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -772,10 +772,14 @@ function metaFor(r,f){var m=metaTec(r,f),ab=false,ex=0,pm=0;jorn.forEach(functio
 function metaTag(r,f){var t='';jorn.forEach(function(j){if(j.resp!==r||!jok(j))return;var k=j.tipo||'doce';if(k==='extra'){if(j.desde===f&&t!=='Ausente')t=t||'+extra'}else if(k==='permiso'){if(j.desde===f&&t!=='Ausente')t='Permiso'}else if(j.desde<=f&&f<=j.hasta){if(k==='ausencia')t='Ausente';else if(t!=='Ausente')t='12 h'}});return t}
 function loadReal(r,f){var m=0;tasks.forEach(function(t){if(t.estado==='noreal')return;if(t.resp===r&&t.fecha===f&&t.real!==''&&t.real!=null)m+=mn(t.real);(t.partes||[]).forEach(function(p){if(p.tec===r&&p.fecha===f)m+=mn(p.real)})});return m}
 function loadMin(r,f,skip){var m=0;tasks.forEach(function(t){if(t.resp===r&&t.fecha===f&&t.estado!=='noreal'&&t.id!==skip)m+=mn(t.est)});return m}
+var LDD='';
 function renderLoad(){
- var f=$('fD').value||dstr(jd());
- $('ld').innerHTML='<h2>Carga por técnico · '+esc(f)+'</h2>'+RESPONSABLES.map(function(r){var m=loadMin(r,f,null),mt=metaFor(r,f),re=loadReal(r,f),p=mt?Math.min(100,Math.round(m/mt*100)):(m?100:0),ov=m>mt;return '<div class="lr"><span>'+esc(r)+(metaTag(r,f)?' <small style="color:var(--ac);font-weight:800">'+metaTag(r,f)+'</small>':'')+'</span><div class="bar"><i style="width:'+p+'%;background:'+(ov?'var(--rd)':'var(--ac)')+'"></i></div><b'+(ov?' style="color:var(--rd)"':'')+'>'+(mt?m+' / '+mt+' min':'Ausente'+(m?' · '+m+' min asignados':''))+(re?'<br><small style="font-weight:400;color:var(--mu)">real '+re+' min</small>':'')+'</b></div>'}).join('');
+ var f=LDD||$('fD').value||dstr(jd());
+ $('ld').innerHTML='<h2>Carga por técnico</h2><div class="ldn" style="display:flex;gap:6px;align-items:center;margin-bottom:10px"><button type="button" class="btn g s" data-ld="-1" aria-label="Día anterior" style="min-width:44px">◀</button><input type="date" data-ldi value="'+esc(f)+'" aria-label="Fecha de la carga" style="flex:1"><button type="button" class="btn g s" data-ld="1" aria-label="Día siguiente" style="min-width:44px">▶</button><button type="button" class="btn g s" data-ld="0" style="min-width:60px">Hoy</button></div><div class="mt" style="margin-bottom:8px"><b>'+esc(DN[wdOf(f)]+' '+dmy(f))+'</b></div>'+RESPONSABLES.map(function(r){var m=loadMin(r,f,null),mt=metaFor(r,f),re=loadReal(r,f),p=mt?Math.min(100,Math.round(m/mt*100)):(m?100:0),ov=m>mt;return '<div class="lr"><span>'+esc(r)+(metaTag(r,f)?' <small style="color:var(--ac);font-weight:800">'+metaTag(r,f)+'</small>':'')+'</span><div class="bar"><i style="width:'+p+'%;background:'+(ov?'var(--rd)':'var(--ac)')+'"></i></div><b'+(ov?' style="color:var(--rd)"':'')+'>'+(mt?m+' / '+mt+' min':'Ausente'+(m?' · '+m+' min asignados':''))+(re?'<br><small style="font-weight:400;color:var(--mu)">real '+re+' min</small>':'')+'</b></div>'}).join('');
+ $('ld2').innerHTML=$('ld').innerHTML;
 }
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-ld]');if(!b)return;var f=LDD||$('fD').value||dstr(jd()),n=b.getAttribute('data-ld');LDD=n==='0'?'':addD(f,+n);renderLoad()});
+document.addEventListener('change',function(e){var i=e.target;if(i&&i.hasAttribute&&i.hasAttribute('data-ldi')){LDD=i.value||'';renderLoad()}});
 function sumF(){
  var r=$('fRe').value,f=$('fFe').value,m=+$('fEs').value||0,el=$('fSm');
  if(!r||!f){el.textContent='Seleccione responsable y fecha para ver la carga del día.';el.style.borderLeftColor='var(--ln)';return}
