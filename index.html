@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.5 · 10/11/2026 23:09">
+<meta name="app-version" content="V2.6 · 11/11/2026 06:40">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -1394,6 +1394,7 @@ $('sS').onclick=function(){
 };
 
 var vc={},vx={};
+var vd={};
 function renderV(){
  var l=tasks.filter(function(t){return t.rev==='revision'||sinTomar(t)}).sort(function(a,b){return String(a.fecha).localeCompare(String(b.fecha))});
  $('vL').innerHTML=l.length?l.map(function(t){
@@ -1407,17 +1408,22 @@ function renderV(){
   if((t.fotos||[]).length)h+='<div class="fl">'+t.fotos.map(function(x){return '<img class="im" alt="Foto" src="'+fsrc(x)+'">'}).join('')+'</div>';
   var x=vx[t.id]||{},id=t.id,sl=function(f,lb,opts,cur,ph){return '<label class="lb">'+lb+'<select class="vs" data-c="'+id+'" data-f="'+f+'">'+(ph?'<option value="">'+ph+'</option>':'')+opts.map(function(n){return '<option'+(cur===n?' selected':'')+'>'+esc(n)+'</option>'}).join('')+'</select></label>'};
   var ao=k==='h'?['No crear OT nueva por ahora','Crear OT nueva']:k==='i'?['Crear OT que continúa','No crear OT por ahora']:['No crear OT por ahora','Crear OT que reprograma'];
-  h+='<div class="lb" style="margin-top:10px"><b>Decisión</b></div>'+sl('ac','Qué hacer con la OT *',ao,x.ac||ao[0])+'<label class="lb">Comentario'+(k==='h'?' (obligatorio al desaprobar)':' (obligatorio si crea OT nueva)')+'<input class="vc" data-c="'+id+'" placeholder="Indicación o comentario" value="'+esc(vc[id]||'')+'"></label>';
-  h+='<div class="lb" style="margin-top:8px"><b>Datos de la OT nueva (solo si elige crear)</b></div>'+sl('r','Responsable (puede ser otro técnico)',RESPONSABLES,x.r||'','Elegir responsable')+'<div class="g2"><label class="lb">Fecha<input type="date" class="vs" data-c="'+id+'" data-f="f" value="'+(x.f||dstr(jd()))+'"></label>'+sl('tn','Turno',['Mañana','Tarde','Noche'],x.tn||turnoNow())+'</div><div class="g2">'+sl('pr','Prioridad',['baja','media','alta','critica'],x.pr||t.prio||'media')+'<label class="lb">Tiempo estimado (min)<input type="number" min="1" class="vs" data-c="'+id+'" data-f="es" inputmode="numeric" value="'+(x.es!=null?x.es:(t.est===''||t.est==null?'':mn(t.est)))+'"></label></div>'+sl('tp','Tipo',['Correctivo no programado','Correctivo programado'],x.tp||'Correctivo no programado');
-  h+='<div class="ac">'+(k==='h'?'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn g s d" data-r="x" data-i="'+id+'">Desaprobar</button>':(t.rev==='revisada'?'':'<button class="btn s" data-r="v" data-i="'+id+'">Revisada</button>')+(k==='i'?'<button class="btn g s d" data-r="c" data-i="'+id+'">Cerrar como incompleta</button>':''))+'</div></div>';
+  var cr=/^Crear/.test(x.ac||ao[0]),dz=k==='h'&&!!vd[id];
+  if(k!=='h'||dz){
+   h+='<div class="lb" style="margin-top:10px"><b>'+(dz?'Desaprobar: indique qué corregir':'Decisión')+'</b></div>'+sl('ac','Qué hacer con la OT *',ao,x.ac||ao[0])+'<label class="lb">'+(dz?'Qué hay que corregir *':'Comentario (obligatorio si crea OT nueva)')+'<input class="vc" data-c="'+id+'" placeholder="Indicación o comentario" value="'+esc(vc[id]||'')+'"></label>';
+   if(cr)h+='<div class="lb" style="margin-top:8px"><b>Datos de la OT nueva</b></div>'+sl('r','Responsable de la OT nueva (puede ser otro técnico)',RESPONSABLES,x.r||'','Elegir responsable')+'<div class="g2"><label class="lb">Fecha de la OT nueva<input type="date" class="vs" data-c="'+id+'" data-f="f" value="'+(x.f||dstr(jd()))+'"></label>'+sl('tn','Turno de la OT nueva',['Mañana','Tarde','Noche'],x.tn||turnoNow())+'</div><div class="g2">'+sl('pr','Prioridad',['baja','media','alta','critica'],x.pr||t.prio||'media')+'<label class="lb">Tiempo estimado de la OT nueva (min)<input type="number" min="1" class="vs" data-c="'+id+'" data-f="es" inputmode="numeric" value="'+(x.es!=null?x.es:(t.est===''||t.est==null?'':mn(t.est)))+'"></label></div>'+sl('tp','Tipo',['Correctivo no programado','Correctivo programado'],x.tp||'Correctivo no programado');
+  }
+  h+='<div class="ac">'+(k==='h'?(dz?'<button class="btn s d" data-r="x" data-i="'+id+'">Confirmar desaprobación</button><button class="btn g s" data-r="xc" data-i="'+id+'">Cancelar</button>':'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn g s d" data-r="xo" data-i="'+id+'">Desaprobar</button>'):(t.rev==='revisada'?'':'<button class="btn s" data-r="v" data-i="'+id+'">Revisada</button>')+(k==='i'?'<button class="btn g s d" data-r="c" data-i="'+id+'">Cerrar como incompleta</button>':''))+'</div></div>';
   return h}).join(''):'<div class="em">No hay tareas para revisar.</div>';
 }
-$('vL').addEventListener('input',function(e){var d=e.target.dataset;if(!d.c)return;if(d.f){(vx[d.c]=vx[d.c]||{})[d.f]=e.target.value}else vc[d.c]=e.target.value});
+$('vL').addEventListener('input',function(e){var d=e.target.dataset;if(!d.c)return;if(d.f){(vx[d.c]=vx[d.c]||{})[d.f]=e.target.value;if(d.f==='ac')renderV()}else vc[d.c]=e.target.value});
 $('vL').addEventListener('click',function(e){
  if(e.target.classList.contains('im')){e.target.classList.toggle('big');return}
  var b=e.target.closest('button');if(!b||!b.dataset.r)return;
  if(!me||me.rol!=='supervisor')return;
  var id=+b.dataset.i,t=tasks.filter(function(x){return x.id===id})[0];if(!t)return;
+ if(b.dataset.r==='xo'){vd[id]=1;renderV();return}
+ if(b.dataset.r==='xc'){delete vd[id];delete vc[id];renderV();return}
  var r=b.dataset.r,k=t.estado==='hecha'?'h':t.estado==='incompleto'?'i':'n',com=String(vc[id]||'').trim(),x=vx[id]||{};
  var ac=x.ac||(k==='i'?'Crear OT que continúa':'No crear OT por ahora'),crear=/^Crear/.test(ac)&&r!=='a';
  var rv=me.nombre,ahora=new Date().toISOString();
