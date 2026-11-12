@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.9 · 11/11/2026 23:57">
+<meta name="app-version" content="V2.9 · 12/11/2026 00:10">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -392,9 +392,6 @@ body{background:#fff}
 <div class="pan" id="ct" hidden>
 <button class="bk" data-bk="ct">‹ Volver</button>
 <h2>Cambio de turno</h2>
-<div class="box" style="margin-bottom:12px;border-left:4px solid #7FA3D1"><b>¿Para qué sirve esta pantalla?</b>
-<div class="mt" style="margin-top:4px">La nota es un <b>aviso para el próximo turno</b>: qué quedó pendiente y qué tiene que saber. Al entrar, tocá <b>Confirmar lectura</b>.<br>El trabajo que hiciste <b>no se anota acá</b>: se carga como <b>orden de trabajo</b>.</div>
-<button type="button" class="btn s" id="ctOT" style="margin-top:8px">Cargar una orden de trabajo</button></div>
 <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><button class="btn g s" id="ctP" aria-label="Día anterior">‹</button><select id="ctD" style="flex:1"></select><button class="btn g s" id="ctN" aria-label="Día siguiente">›</button></div>
 <div id="ctL"></div>
 <div class="sec">Dejar una nota</div>
@@ -1900,7 +1897,7 @@ function renderCT(){
   return h+'</div>'}).join('');
 }
 $('bCt').onclick=function(){ctDay='';var tn=turnoNow();CTT=tn==='Tarde'?'Mañana':tn==='Noche'?'Tarde':'Noche';renderCT();$('ctT').value=turnoNow();$('ctX').value='';$('ct').hidden=false};
-$('ctOT').onclick=function(){$('ct').hidden=true;$('bN').click()};
+
 $('ctL').addEventListener('click',function(e){var t=e.target.closest('[data-ctt]');if(t){CTT=t.dataset.ctt;renderCT()}});
 $('ctD').onchange=function(){ctDay=$('ctD').value;renderCT()};
 function ctStep(k){var a=ctDays(),i=a.indexOf(ctDay||a[0])+k;if(i>=0&&i<a.length){ctDay=a[i];renderCT()}}
