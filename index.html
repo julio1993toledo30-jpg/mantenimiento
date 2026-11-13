@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.9 · 12/11/2026 00:10">
+<meta name="app-version" content="V2.9 · 12/11/2026 21:50">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -1190,7 +1190,7 @@ function open(t){
  setSel('fCr',CREADORES,cr,'Seleccionar');
  setSel('fRe',(me&&me.rol==='supervisor')?RESPONSABLES.concat(['Contratista']):RESPONSABLES,t?t.resp:'','Seleccionar');
  setSel('fTp',TIPOS,t?t.tipo:'','Seleccionar');
- AC=t&&t.acomp?t.acomp.slice():[];if(t&&t.contr&&t.resp!=='Contratista'&&!AC.some(function(x){return x.k==='c'}))AC.push({n:t.contrNom||'Contratista',k:'c'});syncCt();acRender();
+ $('acS').value='';$('acN').value=''; AC=t&&t.acomp?t.acomp.slice():[];if(t&&t.contr&&t.resp!=='Contratista'&&!AC.some(function(x){return x.k==='c'}))AC.push({n:t.contrNom||'Contratista',k:'c'});syncCt();acRender();
  $('fPr').value=t?t.prio:'media';$('fSt').value=t?t.estado:'pendiente';
  $('fFe').value=t?t.fecha:dstr(jd());
  L.parts=t?JSON.parse(JSON.stringify(t.parts||[])):[];L.pedir=t?JSON.parse(JSON.stringify(t.pedir||[])):[];fotos=t?(t.fotos||[]).slice():[];
@@ -1889,7 +1889,7 @@ function renderCT(){
   var dn=tasks.filter(function(x){return x.fecha===d&&x.turno===t[0]&&(x.estado==='hecha'||x.estado==='incompleto')});
   if(dn.length){h+='<details style="margin-top:10px"><summary><b>Tareas del turno ('+dn.length+')</b></summary>';
    ['Preventivo','Predictivo','Correctivo programado','Correctivo no programado'].forEach(function(tp){var g=dn.filter(function(x){return x.tipo===tp});if(!g.length)return;
-    h+='<div class="mt" style="margin-top:8px"><b>'+tp+' ('+g.length+')</b></div>'+g.map(function(x){return '<div style="margin-top:4px;padding-left:8px;border-left:3px solid var(--ln)">'+(x.ot?esc(fmt(x.ot))+' · ':'')+esc(x.titulo)+(x.equipo?' <span class="mt">('+esc(x.equipo)+')</span>':'')+'<div class="mt" style="margin-top:3px">'+chS(SC[x.estado]||'#9AA0A8',x.estado==='hecha'?'Realizada':'Incompleta',SI[x.estado])+(x.motivo&&x.estado!=='hecha'?' <b>'+esc(x.motivo+(x.motivoOtro?' - '+x.motivoOtro:''))+'</b>':'')+(x.resp?' · '+esc(x.resp):'')+(x.acomp&&x.acomp.length?' · con '+esc(acList(x.acomp)):'')+'</div>'+(x.fb?'<div class="mt">'+esc(String(x.fb).slice(0,160))+(String(x.fb).length>160?'…':'')+'</div>':'')+'</div>'}).join('')});
+    h+='<div class="mt" style="margin-top:8px"><b>'+tp+' ('+g.length+')</b></div>'+g.map(function(x){return '<div style="margin-top:4px;padding-left:8px;border-left:3px solid var(--ln)">'+(x.ot?esc(fmt(x.ot))+' · ':'')+esc(x.titulo)+(x.equipo?' <span class="mt">('+esc(x.equipo)+')</span>':'')+'<div class="mt" style="margin-top:3px">'+chS(SC[x.estado]||'#9AA0A8',x.estado==='hecha'?'Realizada':'Incompleta',SI[x.estado])+(x.motivo&&x.estado!=='hecha'?' <b>'+esc(x.motivo+(x.motivoOtro?' - '+x.motivoOtro:''))+'</b>':'')+(x.resp?' · '+esc(x.resp):'')+(x.acomp&&x.acomp.length?' · con '+esc(acList(x.acomp)):'')+'</div>'+(x.fb?'<div class="mt">'+esc(String(x.fb))+'</div>':'')+'</div>'}).join('')});
    h+='</details>'}
   var sl=ns.filter(function(x){return !(x.lect||{})[me.nombre]&&x.por!==me.nombre});
   if(sl.length)h+='<div class="ac" style="margin-top:10px"><button class="btn s" data-cla="'+t[0]+'">Confirmar lectura</button></div>';
