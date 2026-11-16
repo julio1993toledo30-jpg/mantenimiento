@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.11 · 16/11/2026 20:10">
+<meta name="app-version" content="V2.11 · 16/11/2026 20:55">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -154,7 +154,7 @@ body{background:#fff}
 <div id="rhz"></div>
 <div class="stats">
 <button type="button" class="st" data-go="hoy"><b id="sD">0</b><span>De hoy</span></button>
-<button type="button" class="st" data-go="abiertas"><b id="sA">0</b><span>Abiertas</span></button>
+<button type="button" class="st" data-go="abiertas"><b id="sA">0</b><span>Órdenes de trabajo abiertas</span></button>
 <button type="button" class="st" data-go="cerradas"><b id="sK">0</b><span>Cerradas hoy</span></button>
 <button type="button" class="st" data-go="revisar"><b id="sP">0</b><span>Para revisar</span></button>
 <button type="button" class="st" data-go="pedir"><b id="sC">0</b><span>Repuestos a pedir</span></button>
@@ -854,6 +854,9 @@ function sumF(){
 }
 var TC={'Preventivo':'#4FB477','Predictivo':'#4F94E0','Correctivo programado':'#E08A2E','Correctivo no programado':'#E0524A'},SC={pendiente:'#D6B85F',hecha:'#78AD8B',noreal:'#9AA0A8',incompleto:'#D39563'},PC={baja:'#8FB59A',media:'#C9B574',alta:'#D39563',critica:'#D17F78'},SI={pendiente:'M12 7v5l3 2',hecha:'M5 12l5 5 9-10',noreal:'M6 6l12 12M18 6 6 18',incompleto:'M5 12h14'},openD={};
 function chS(c,x,p){return '<span class="tg" style="color:#fff;background:'+c+'55;border-color:'+c+';border-width:2px;font-size:14px;font-weight:800;padding:4px 14px">'+(p?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
+function tmChip(t){var e=mn(t.est),has=t.real!==''&&t.real!=null;if(!has)return chp('#A0A8B1','Plan '+e+' min');var r=mn(t.real),d=r-e;
+ if(t.estado==='noreal')return chp('#A0A8B1','Plan '+e+' · Real '+r+' min');
+ return chp(d===0?'#78AD8B':d>0?'#D17F78':'#E08A2E','Plan '+e+' · Real '+r+' min'+(d?' ('+(d>0?'+':'−')+Math.abs(d)+')':''))}
 function chp(c,x,p){return '<span class="tg" style="color:'+c+';background:'+c+'26;border-color:'+c+'55">'+(p?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
 function nPed(t){return (t.pedir||[]).filter(function(p){return p.n&&!p.ok}).length}
 function canE(t){return !!me&&!!me.rol&&(me.rol==='supervisor'||t.resp===me.nombre)}
@@ -861,7 +864,7 @@ function canTake(t){return !!me&&me.rol==='tecnico'&&(t.tipo==='Correctivo no pr
 function cardH(t){
  var n=nPed(t),h='<div class="t'+(t.estado==='hecha'?' hecha':'')+'" style="--c:'+(TC[t.tipo]||'#7a838c')+'"><div class="r1"><b class="ti">'+(t.ot?fmt(t.ot)+' · ':'')+esc(t.titulo)+'</b><span class="fe">'+esc(String(t.fecha||'').slice(5).split('-').reverse().join('/'))+'</span></div>';
  h+='<div class="mt">'+[t.equipo,t.resp&&('Resp.: '+t.resp),t.cre&&('Creada: '+t.cre),t.acomp&&t.acomp.length&&('Con: '+acList(t.acomp)),t.contr&&('Contratista: '+(t.contrNom||'sí')),t.horaFalla&&('Falla ~'+t.horaFalla+(t.horaCarga?' · cargada '+t.horaCarga:'')),t.parte&&('Parte: '+t.parte),t.sub&&('Subparte: '+t.sub)].filter(Boolean).map(esc).join(' · ')+'</div>';
- h+='<div class="cp">'+(t.tipo?chp(TC[t.tipo]||'#9AA0A8',t.tipo):'')+chS(SC[t.estado]||'#9AA0A8',EL[t.estado]||t.estado,SI[t.estado])+(t.rev==='revision'?chp('#D6B85F','En revisión'):t.rev==='aprobada'?chp('#78AD8B','Aprobada'):(t.rev==='rehacer')?chp('#D17F78','Desaprobada'):t.rev==='revisada'?chp('#8FA3B8','Revisada'):'')+(sinTomar(t)?chp('#D17F78','Sin tomar'):'')+(PL[t.prio]?chp(PC[t.prio],PL[t.prio].replace('Prioridad ','')):'')+(t.turno?chp('#A0A8B1','Turno: '+t.turno):'')+(t.fecha?chp('#A0A8B1','Sem '+wnum(t.fecha)):'')+(t.motivo?chp('#E08A2E','Motivo: '+t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+chp('#A0A8B1',mn(t.est)+' min'+((t.real!==''&&t.real!=null)?' / real '+mn(t.real):''))+'</div>';
+ h+='<div class="cp">'+(t.tipo?chp(TC[t.tipo]||'#9AA0A8',t.tipo):'')+chS(SC[t.estado]||'#9AA0A8',EL[t.estado]||t.estado,SI[t.estado])+(t.rev==='revision'?chp('#D6B85F','En revisión'):t.rev==='aprobada'?chp('#78AD8B','Aprobada'):(t.rev==='rehacer')?chp('#D17F78','Desaprobada'):t.rev==='revisada'?chp('#8FA3B8','Revisada'):'')+(sinTomar(t)?chp('#D17F78','Sin tomar'):'')+(PL[t.prio]?chp(PC[t.prio],PL[t.prio].replace('Prioridad ','')):'')+(t.turno?chp('#A0A8B1','Turno: '+t.turno):'')+(t.fecha?chp('#A0A8B1','Sem '+wnum(t.fecha)):'')+(t.motivo?chp('#E08A2E','Motivo: '+t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+tmChip(t)+'</div>';
  if(t.rev==='rehacer')h+='<div class="pd" style="background:#D17F7826;border-color:#D17F7866;color:#D17F78">Desaprobada'+(t.revPor?' por '+esc(t.revPor):'')+(t.revCom?': '+esc(t.revCom):'')+(t.revNueva?'. Se creó '+fmt(t.revNueva):'. No se creó OT nueva por ahora')+'</div>';
  if(t.derivDe)h+='<div class="pd" style="background:#7FA3D126;border-color:#7FA3D166;color:#7FA3D1">Surgió de '+fmt(t.derivDe)+(t.derivTit?' «'+esc(t.derivTit)+'»':'')+'</div>';
  if(t.rehaceDe)h+='<div class="pd" style="background:#D17F7826;border-color:#D17F7866;color:#D17F78">'+(t.rehaceTxt||'Rehace')+' '+fmt(t.rehaceDe)+(t.revPor?' (indicó '+esc(t.revPor)+')':'')+(t.revCom?': '+esc(t.revCom):'')+'</div>';
@@ -907,7 +910,8 @@ function render(){
  var names=RESPONSABLES.concat(me&&me.rol==='supervisor'?['Contratista']:[]);
  $('hf').innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+cb('','Todos')+names.map(function(n){return cb(n,n)}).join('')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">'+tb('dia','Tareas del día',dia.length)+tb('prev','Abiertas de días anteriores',prev.length)+'</div>';
  var L=HOYT==='prev'?prev:dia;
- $('hoy').innerHTML=L.length?(HOYT==='prev'?'<div class="mt" style="margin-bottom:8px">Tareas que quedaron abiertas. Quien continúe una falla, toca <b>Tomar esta tarea</b>: queda registrado el traspaso.</div>':'')+L.map(cardH).join(''):'<div class="em">'+(HOYT==='prev'?'No hay tareas abiertas de días anteriores.':'No hay tareas para hoy.')+'</div>';
+ var rs='';if(HOYT==='dia'&&HOYF&&HOYF!=='Contratista'){var pl=loadMin(HOYF,hs,null),re=loadReal(HOYF,hs),mt=metaFor(HOYF,hs),df=re-pl;rs='<div class="box" style="margin-bottom:10px"><b>'+esc(HOYF)+' · hoy</b><div class="mt" style="margin-top:4px">Planificado <b>'+pl+' min</b> · Real cargado <b>'+re+' min</b>'+(re!==pl?' · diferencia <b style="color:'+(df>0?'#D17F78':'#E08A2E')+'">'+(df>0?'+':'−')+Math.abs(df)+' min</b>':' · coinciden')+' · Meta del día '+mt+' min</div></div>'}
+ $('hoy').innerHTML=rs+(L.length?(HOYT==='prev'?'<div class="mt" style="margin-bottom:8px">Tareas que quedaron abiertas. Quien continúe una falla, toca <b>Tomar esta tarea</b>: queda registrado el traspaso.</div>':'')+L.map(cardH).join(''):'<div class="em">'+(HOYT==='prev'?'No hay tareas abiertas de días anteriores.':'No hay tareas para hoy.')+'</div>');
  var f=[$('fT').value,$('fE').value,$('fU').value,$('fD').value,$('fY').value,$('fK').value,$('fW').value,$('fR').value],nf=f.filter(Boolean).length,q=$('fQ').value.trim().toLowerCase(),qd=q.replace(/^ot[-\s]*/,'');
  $('fN').textContent='Filtros'+(nf?' ('+nf+')':'');
  var ts=tasks.filter(function(t){
@@ -1464,7 +1468,7 @@ function renderV(){
  $('vL').innerHTML=l.length?l.map(function(t){
   var k=t.estado==='hecha'?'h':t.estado==='incompleto'?'i':'n';
   var h='<div class="t" style="--c:'+(TC[t.tipo]||'#7a838c')+'"><div class="r1"><b class="ti">'+(t.ot?fmt(t.ot)+' · ':'')+esc(t.titulo)+'</b><span class="fe">'+esc(dmy(t.fecha||''))+'</span></div><div class="mt">'+[t.equipo,t.resp&&('Resp.: '+t.resp),t.turno&&('Turno: '+t.turno)].filter(Boolean).map(esc).join(' · ')+'</div>';
-  h+='<div class="cp">'+(t.tipo?chp(TC[t.tipo]||'#9AA0A8',t.tipo):'')+chS(SC[t.estado]||'#9AA0A8',EL[t.estado]||t.estado,SI[t.estado])+(t.rev==='revisada'?chp('#8FA3B8','Revisada'):'')+(sinTomar(t)?chp('#D17F78','Sin tomar'):'')+chp('#A0A8B1',(t.real!==''&&t.real!=null?'real '+mn(t.real):'estimado '+mn(t.est))+' min')+(t.motivo?chp('#E08A2E','Motivo: '+t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+'</div>';
+  h+='<div class="cp">'+(t.tipo?chp(TC[t.tipo]||'#9AA0A8',t.tipo):'')+chS(SC[t.estado]||'#9AA0A8',EL[t.estado]||t.estado,SI[t.estado])+(t.rev==='revisada'?chp('#8FA3B8','Revisada'):'')+(sinTomar(t)?chp('#D17F78','Sin tomar'):'')+tmChip(t)+(t.motivo?chp('#E08A2E','Motivo: '+t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+'</div>';
   if(t.detalle)h+='<div class="lb">Detalle</div><div class="det">'+esc(t.detalle)+'</div>';
   h+='<div class="lb">Feedback del técnico</div><div class="det">'+(esc(t.fb)||'—')+'</div>';
   if((t.partes||[]).length)h+='<div class="lb">Partes anteriores</div><div class="det">'+esc(t.partes.map(function(p){return (p.tec||'')+' · '+mn(p.real)+' min · '+(p.fb||'sin feedback')}).join('\n'))+'</div>';
