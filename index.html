@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.10 · 14/11/2026 06:10">
+<meta name="app-version" content="V2.11 · 16/11/2026 20:10">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -307,6 +307,21 @@ body{background:#fff}
 <label>Tiempo real (min) <b class="rq">*</b><input type="number" id="zR" min="0" step="5" inputmode="numeric"></label>
 <label>Feedback <small class="op">opcional: qué se hizo y cómo quedó</small><textarea id="zF" rows="3"></textarea></label>
 <div class="ac"><button class="btn" id="zOk">Marcar realizada</button><button class="btn g" id="zX">Cancelar</button></div>
+</div>
+<div class="pan" id="dvp" hidden>
+<button class="bk" data-bk="dvp">‹ Volver</button>
+<h2>Planificar tarea nueva</h2>
+<div class="mt" id="dvO" style="margin-bottom:10px"></div>
+<div class="lb">Feedback de la tarea original (para guiarse)</div><div class="det" id="dvF" style="margin-bottom:10px"></div>
+<div class="lgq"><b class="rq">*</b> Obligatorio.</div>
+<label>Título <b class="rq">*</b><input id="dvT" placeholder="Qué hay que hacer"></label>
+<div class="g2"><label>Tipo de mantenimiento <b class="rq">*</b><select id="dvTp"></select></label><label>Prioridad <b class="rq">*</b><select id="dvPr"><option>baja</option><option selected>media</option><option>alta</option><option>critica</option></select></label></div>
+<div class="g2"><label>Área<input id="dvAr"></label><label>Sector / Equipo<input id="dvEq"></label></div>
+<label>Parte<input id="dvPa"></label>
+<label>Detalle de tarea <b class="rq">*</b><textarea id="dvDe" rows="3" placeholder="Qué hay que hacer, herramientas, advertencias"></textarea></label>
+<div class="g2"><label>Responsable <b class="rq">*</b><select id="dvRe"></select></label><label>Fecha <b class="rq">*</b><input type="date" id="dvFe"></label></div>
+<div class="g2"><label>Turno <b class="rq">*</b><select id="dvTu"><option>Mañana</option><option>Tarde</option><option>Noche</option></select></label><label>Tiempo estimado (min) <b class="rq">*</b><input type="number" min="1" id="dvEs" inputmode="numeric"></label></div>
+<div class="ac"><button class="btn" id="dvOk">Planificar tarea</button><button class="btn g" id="dvX">Cancelar</button></div>
 </div>
 <div class="pan" id="rbp" hidden>
 <button class="bk" data-bk="rbp">‹ Volver</button>
@@ -848,6 +863,7 @@ function cardH(t){
  h+='<div class="mt">'+[t.equipo,t.resp&&('Resp.: '+t.resp),t.cre&&('Creada: '+t.cre),t.acomp&&t.acomp.length&&('Con: '+acList(t.acomp)),t.contr&&('Contratista: '+(t.contrNom||'sí')),t.horaFalla&&('Falla ~'+t.horaFalla+(t.horaCarga?' · cargada '+t.horaCarga:'')),t.parte&&('Parte: '+t.parte),t.sub&&('Subparte: '+t.sub)].filter(Boolean).map(esc).join(' · ')+'</div>';
  h+='<div class="cp">'+(t.tipo?chp(TC[t.tipo]||'#9AA0A8',t.tipo):'')+chS(SC[t.estado]||'#9AA0A8',EL[t.estado]||t.estado,SI[t.estado])+(t.rev==='revision'?chp('#D6B85F','En revisión'):t.rev==='aprobada'?chp('#78AD8B','Aprobada'):(t.rev==='rehacer')?chp('#D17F78','Desaprobada'):t.rev==='revisada'?chp('#8FA3B8','Revisada'):'')+(sinTomar(t)?chp('#D17F78','Sin tomar'):'')+(PL[t.prio]?chp(PC[t.prio],PL[t.prio].replace('Prioridad ','')):'')+(t.turno?chp('#A0A8B1','Turno: '+t.turno):'')+(t.fecha?chp('#A0A8B1','Sem '+wnum(t.fecha)):'')+(t.motivo?chp('#E08A2E','Motivo: '+t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+chp('#A0A8B1',mn(t.est)+' min'+((t.real!==''&&t.real!=null)?' / real '+mn(t.real):''))+'</div>';
  if(t.rev==='rehacer')h+='<div class="pd" style="background:#D17F7826;border-color:#D17F7866;color:#D17F78">Desaprobada'+(t.revPor?' por '+esc(t.revPor):'')+(t.revCom?': '+esc(t.revCom):'')+(t.revNueva?'. Se creó '+fmt(t.revNueva):'. No se creó OT nueva por ahora')+'</div>';
+ if(t.derivDe)h+='<div class="pd" style="background:#7FA3D126;border-color:#7FA3D166;color:#7FA3D1">Surgió de '+fmt(t.derivDe)+(t.derivTit?' «'+esc(t.derivTit)+'»':'')+'</div>';
  if(t.rehaceDe)h+='<div class="pd" style="background:#D17F7826;border-color:#D17F7866;color:#D17F78">'+(t.rehaceTxt||'Rehace')+' '+fmt(t.rehaceDe)+(t.revPor?' (indicó '+esc(t.revPor)+')':'')+(t.revCom?': '+esc(t.revCom):'')+'</div>';
  if(n)h+='<div class="pd"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.3"/><circle cx="17" cy="19" r="1.3"/></svg>Repuestos a pedir: '+n+'</div>';
  h+='<details class="mo" data-id="'+t.id+'"'+(openD[t.id]?' open':'')+'><summary>Ver detalle</summary>';
@@ -855,14 +871,14 @@ function cardH(t){
  h+=sec('Repuestos utilizados',tbl(t.parts));
  h+=sec('Repuestos a pedir',tbl(t.pedir,t.id,1));
  h+=sec('Feedback de la tarea',t.fb&&'<div class="det">'+esc(t.fb)+'</div>');
- h+=sec('Historial de revisiones',(t.hist||[]).length?'<div class="det">'+t.hist.map(function(x){return esc((x.rev==='aprobada'?'Aprobada':x.rev==='revisada'?'Revisada':x.rev==='reabierta'?'Reabierta':x.rev==='cerrada'?'Cerrada'+(x.nueva?' (nueva '+fmt(x.nueva)+')':''):'Desaprobada'+(x.nueva?' (nueva '+fmt(x.nueva)+')':''))+' · '+(x.por||'')+' · '+dmy(String(x.fec).slice(0,10))+(x.com?' · '+x.com:''))}).join('\n')+'</div>':'');
+ h+=sec('Historial de revisiones',(t.hist||[]).length?'<div class="det">'+t.hist.map(function(x){return esc((x.rev==='aprobada'?'Aprobada':x.rev==='revisada'?'Revisada':x.rev==='reabierta'?'Reabierta':x.rev==='derivada'?'Se planificó '+(x.nueva?fmt(x.nueva):'una tarea nueva'):x.rev==='cerrada'?'Cerrada'+(x.nueva?' (nueva '+fmt(x.nueva)+')':''):'Desaprobada'+(x.nueva?' (nueva '+fmt(x.nueva)+')':''))+' · '+(x.por||'')+' · '+dmy(String(x.fec).slice(0,10))+(x.com?' · '+x.com:''))}).join('\n')+'</div>':'');
  h+=sec('Partes anteriores (otro técnico)',(t.partes||[]).length?'<div class="det">'+t.partes.map(function(p){return esc((p.tec||'')+' · '+dmy(p.fecha||'')+' '+(p.turno||'')+' · '+mn(p.real)+' min · '+(p.fb||'sin feedback')+(p.motivo?' · Motivo: '+p.motivo+(p.motivoOtro?' · '+p.motivoOtro:''):''))}).join('\n')+'</div>':'');
  h+=sec('Fotos',(t.fotos||[]).length?'<div class="fl">'+t.fotos.map(function(s){return '<img class="im" alt="Foto de la tarea" src="'+fsrc(s)+'">'}).join('')+'</div>':'');
  h+=sec('Traspasos entre turnos',(t.traspaso||[]).length?'<div class="det">'+t.traspaso.map(function(x){return esc(dmy(String(x.fec).slice(0,10))+' '+String(x.fec).slice(11,16)+' · turno '+(x.turno||'')+' · pasó de '+(x.de||'sin asignar')+' a '+x.a)}).join('\n')+'</div>':'');
  if(t.modPor)h+='<div class="mt" style="margin-top:6px">Última modificación: '+esc(t.modPor)+(t.modEn?' · '+esc(dmy(String(t.modEn).slice(0,10))+' '+String(t.modEn).slice(11,16)):'')+'</div>';
  h+='<div class="ac">';
  if(canTake(t))h+='<button class="btn s" data-a="take" data-i="'+t.id+'">Tomar esta tarea</button>';
- if(t.estado==='hecha'){if(me&&me.rol==='supervisor'&&t.rev!=='aprobada')h+='<button class="btn g s" data-a="reab" data-i="'+t.id+'">Reabrir</button>'}else if(canE(t))h+='<button class="btn s" data-a="next" data-i="'+t.id+'">Marcar realizada</button>';
+ if(t.estado==='hecha'){if(me&&me.rol==='supervisor'){h+='<button class="btn s" data-a="deriv" data-i="'+t.id+'">Crear tarea a partir de esta</button>';if(t.rev!=='aprobada')h+='<button class="btn g s" data-a="reab" data-i="'+t.id+'">Reabrir</button>'}}else if(canE(t))h+='<button class="btn s" data-a="next" data-i="'+t.id+'">Marcar realizada</button>';
  h+='<button class="btn g s" data-a="pdf" data-i="'+t.id+'">Imprimir / PDF</button>';
  if(canE(t))h+='<button class="btn g s" data-a="edit" data-i="'+t.id+'">Editar</button>';
  if(me&&me.rol==='supervisor')h+='<button class="btn g s d" data-a="del" data-i="'+t.id+'">'+(delArm===t.id?'Confirmar borrado':'Borrar')+'</button>';
@@ -870,7 +886,7 @@ function cardH(t){
  h+='</div></details></div>';
  return h;
 }
-function srt(a,b){return (!isOpen(a))-(!isOpen(b))||(ORD[a.prio]||0)-(ORD[b.prio]||0)||String(a.fecha).localeCompare(String(b.fecha))}
+function srt(a,b){return (!isOpen(a))-(!isOpen(b))||String(b.fecha).localeCompare(String(a.fecha))||(b.ot||0)-(a.ot||0)}
 function render(){
  if(wait){$('list').innerHTML='<div class="em">Cargando tareas…</div>';$('hoy').innerHTML='';return}
  refT();
@@ -906,14 +922,14 @@ function printOT(t){
  var r=function(k,v){return v?'<tr><td class="k">'+k+'</td><td>'+esc(v)+'</td></tr>':''};
  var rp=function(a){var x=(a||[]).filter(function(p){return p.n||p.d});if(!x.length)return '<div class="tx">—</div>';return '<table><tr><th>Repuesto</th><th>Descripción</th><th>Cant.</th></tr>'+x.map(function(p){return '<tr><td>'+esc(p.n)+'</td><td>'+esc(p.d)+'</td><td>'+esc(p.q)+'</td></tr>'}).join('')+'</table>'};
  var h='<div class="hd"><img src="'+LOGO+'" alt="Logo"><div><h1>ORDEN DE TRABAJO</h1><b>'+(t.ot?fmt(t.ot):'')+'</b> · '+esc(dmy(t.fecha||''))+'</div></div>';
- h+='<table>'+r('Tarea',t.titulo)+r('Tipo de mantenimiento',t.tipo)+r('Prioridad',(PL[t.prio]||'').replace('Prioridad ',''))+r('Estado',EL[t.estado])+r('Creada por',t.cre)+r('Responsable',t.resp)+r('Acompañantes',acList(t.acomp))+r('Contratista',t.contr?(t.contrNom||'Sí'):'')+r('Origen',t.rehaceDe?((t.rehaceTxt||'Rehace')+' '+fmt(t.rehaceDe)):'')+r('Área',t.area)+r('Equipo',t.equipo)+r('Parte',t.parte)+r('Subparte',t.sub)+r('Fecha de la tarea',dmy(t.fecha||''))+r('Turno',t.turno)+r('Hora aproximada de la falla',t.horaFalla)+r('Hora de carga',t.horaCarga)+r('Motivo',t.motivo?(t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+r('Revisión',revTxt(t))+r('Comentario de la revisión',t.revCom)+r('Tiempo estimado',mn(t.est)+' min')+(t.real!==''&&t.real!=null?r('Tiempo real',mn(t.real)+' min'):'')+r('Última modificación',t.modPor?(t.modPor+(t.modEn?' · '+dmy(String(t.modEn).slice(0,10))+' '+String(t.modEn).slice(11,16):'')):'')+'</table>';
+ h+='<table>'+r('Tarea',t.titulo)+r('Tipo de mantenimiento',t.tipo)+r('Prioridad',(PL[t.prio]||'').replace('Prioridad ',''))+r('Estado',EL[t.estado])+r('Creada por',t.cre)+r('Responsable',t.resp)+r('Acompañantes',acList(t.acomp))+r('Contratista',t.contr?(t.contrNom||'Sí'):'')+r('Origen',t.rehaceDe?((t.rehaceTxt||'Rehace')+' '+fmt(t.rehaceDe)):t.derivDe?('Surgió de '+fmt(t.derivDe)):'')+r('Área',t.area)+r('Equipo',t.equipo)+r('Parte',t.parte)+r('Subparte',t.sub)+r('Fecha de la tarea',dmy(t.fecha||''))+r('Turno',t.turno)+r('Hora aproximada de la falla',t.horaFalla)+r('Hora de carga',t.horaCarga)+r('Motivo',t.motivo?(t.motivo+(t.motivoOtro?' · '+t.motivoOtro:'')):'')+r('Revisión',revTxt(t))+r('Comentario de la revisión',t.revCom)+r('Tiempo estimado',mn(t.est)+' min')+(t.real!==''&&t.real!=null?r('Tiempo real',mn(t.real)+' min'):'')+r('Última modificación',t.modPor?(t.modPor+(t.modEn?' · '+dmy(String(t.modEn).slice(0,10))+' '+String(t.modEn).slice(11,16):'')):'')+'</table>';
  h+='<h2>Detalle de tarea</h2><div class="tx">'+(esc(t.detalle)||'—')+'</div>';
  h+='<h2>Repuestos utilizados</h2>'+rp(t.parts);
  h+='<h2>Repuestos a pedir</h2>'+rp((t.pedir||[]).map(function(p){return {n:p.n,d:p.d,q:p.q}}));
  h+='<h2>Feedback / tarea realizada</h2><div class="tx">'+(esc(t.fb)||'—')+'</div>';
  if((t.partes||[]).length)h+='<h2>Partes anteriores (otro técnico)</h2><table><tr><th>Técnico</th><th>Fecha / turno</th><th>Tiempo</th><th>Feedback</th></tr>'+t.partes.map(function(p){return '<tr><td>'+esc(p.tec)+'</td><td>'+esc(dmy(p.fecha||'')+' '+(p.turno||''))+'</td><td>'+mn(p.real)+' min</td><td>'+esc(p.fb||'—')+(p.motivo?'<br>Motivo: '+esc(p.motivo+(p.motivoOtro?' · '+p.motivoOtro:'')):'')+'</td></tr>'}).join('')+'</table>';
  if((t.traspaso||[]).length)h+='<h2>Traspasos</h2><table><tr><th>Fecha</th><th>De</th><th>A</th><th>Turno</th></tr>'+t.traspaso.map(function(x){return '<tr><td>'+esc(dmy(String(x.fec||'').slice(0,10))+' '+String(x.fec||'').slice(11,16))+'</td><td>'+esc(x.de||'—')+'</td><td>'+esc(x.a||'')+'</td><td>'+esc(x.turno||'')+'</td></tr>'}).join('')+'</table>';
- if((t.hist||[]).length)h+='<h2>Historial de revisión</h2><table><tr><th>Fecha</th><th>Resultado</th><th>Por</th><th>Comentario</th></tr>'+t.hist.map(function(x){return '<tr><td>'+esc(dmy(String(x.fec||'').slice(0,10)))+'</td><td>'+esc(x.rev==='aprobada'?'Aprobada':x.rev==='revisada'?'Revisada':x.rev==='reabierta'?'Reabierta':x.rev==='cerrada'?'Cerrada':'Desaprobada')+(x.nueva?' (nueva '+fmt(x.nueva)+')':'')+'</td><td>'+esc(x.por||'')+'</td><td>'+esc(x.com||'')+'</td></tr>'}).join('')+'</table>';
+ if((t.hist||[]).length)h+='<h2>Historial de revisión</h2><table><tr><th>Fecha</th><th>Resultado</th><th>Por</th><th>Comentario</th></tr>'+t.hist.map(function(x){return '<tr><td>'+esc(dmy(String(x.fec||'').slice(0,10)))+'</td><td>'+esc(x.rev==='aprobada'?'Aprobada':x.rev==='revisada'?'Revisada':x.rev==='reabierta'?'Reabierta':x.rev==='derivada'?'Se planificó '+(x.nueva?fmt(x.nueva):'una tarea nueva'):x.rev==='cerrada'?'Cerrada':'Desaprobada')+(x.nueva?' (nueva '+fmt(x.nueva)+')':'')+'</td><td>'+esc(x.por||'')+'</td><td>'+esc(x.com||'')+'</td></tr>'}).join('')+'</table>';
  var fo=(t.fotos||[]).map(fsrc).filter(Boolean).slice(0,3);
  if(fo.length)h+='<h2>Fotos</h2><div class="fo" style="page-break-inside:avoid">'+fo.map(function(u){return '<img alt="Foto" src="'+u+'">'}).join('')+'</div>';
  var fb=[],bk=function(rol,nom,acl){fb.push('<div class="fb"><div class="ln"></div><b>'+esc(rol)+'</b>'+(nom?'<span>'+esc(nom)+'</span>':'')+(acl?'<i>Aclaración: ______________________</i>':'')+'</div>')};
@@ -1289,6 +1305,7 @@ function onList(e){
  if(a==='take'){if(!canTake(t))return;t.traspaso=(t.traspaso||[]).concat([{fec:dstr(jd())+'T'+hhmm(),de:t.resp||'',a:me.nombre,turno:turnoNow()}]);if(t.estado==='incompleto'){t.partes=(t.partes||[]).concat([{tec:t.resp||'',fecha:t.fecha||'',turno:t.turno||'',real:(t.real===''||t.real==null)?0:+t.real,fb:t.fb||'',motivo:t.motivo||'',motivoOtro:t.motivoOtro||''}]);t.fecha0=t.fecha0||t.fecha;t.estado='pendiente';t.real='';t.fb='';t.motivo='';t.motivoOtro='';t.fecha=dstr(jd());t.turno=turnoNow();t.rev=''}t.resp=me.nombre;saveTask(t);render();msg('Tomó la tarea '+(t.ot?fmt(t.ot):''));return}
  if((a==='next'||a==='edit')&&!canE(t)){warn('Solo puede modificar sus propias órdenes.');return}
  if(a==='del'&&!(me&&me.rol==='supervisor')){warn('Solo los coordinadores pueden borrar órdenes.');return}
+ if(a==='deriv'){if(!(me&&me.rol==='supervisor')||t.estado!=='hecha')return;openDv(t,false);return}
  if(a==='reab'){if(!(me&&me.rol==='supervisor')||t.rev==='aprobada'||t.estado!=='hecha')return;RBID=t.id;$('rbT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo;$('rbM').value='';$('rbM').classList.remove('bad');$('rbp').hidden=false;return}
  if(a==='next'){if(t.estado==='hecha')return;{ZID=t.id;$('zT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo;$('zR').value=t.real!==''&&t.real!=null?mn(t.real):'';$('zF').value=t.fb||'';$('zR').classList.remove('bad');$('zp').hidden=false}}
  if(a==='pdf')printOT(t);
@@ -1460,7 +1477,7 @@ function renderV(){
    h+='<div class="lb" style="margin-top:10px"><b>'+(dz?'Desaprobar: indique qué corregir':'Decisión')+'</b></div>'+sl('ac','Qué hacer con la OT *',ao,x.ac||ao[0])+'<label class="lb">'+(dz?'Qué hay que corregir *':'Comentario (obligatorio si crea OT nueva)')+'<input class="vc" data-c="'+id+'" placeholder="Indicación o comentario" value="'+esc(vc[id]||'')+'"></label>';
    if(cr)h+='<div class="lb" style="margin-top:8px"><b>Datos de la OT nueva</b></div>'+sl('r','Responsable de la OT nueva (puede ser otro técnico)',RESPONSABLES,x.r||'','Elegir responsable')+'<div class="g2"><label class="lb">Fecha de la OT nueva<input type="date" class="vs" data-c="'+id+'" data-f="f" value="'+(x.f||dstr(jd()))+'"></label>'+sl('tn','Turno de la OT nueva',['Mañana','Tarde','Noche'],x.tn||turnoNow())+'</div><div class="g2">'+sl('pr','Prioridad',['baja','media','alta','critica'],x.pr||t.prio||'media')+'<label class="lb">Tiempo estimado de la OT nueva (min)<input type="number" min="1" class="vs" data-c="'+id+'" data-f="es" inputmode="numeric" value="'+(x.es!=null?x.es:(t.est===''||t.est==null?'':mn(t.est)))+'"></label></div>'+sl('tp','Tipo',TIPOS,x.tp||(TIPOS.indexOf(t.tipo)>=0?t.tipo:'Correctivo no programado'));
   }
-  h+='<div class="ac">'+(k==='h'?(dz?'<button class="btn s d" data-r="x" data-i="'+id+'">Confirmar desaprobación</button><button class="btn g s" data-r="xc" data-i="'+id+'">Cancelar</button>':'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn g s d" data-r="xo" data-i="'+id+'">Desaprobar</button>'):'<button class="btn s" data-r="c" data-i="'+id+'">Confirmar</button>')+'</div></div>';
+  h+='<div class="ac">'+(k==='h'?(dz?'<button class="btn s d" data-r="x" data-i="'+id+'">Confirmar desaprobación</button><button class="btn g s" data-r="xc" data-i="'+id+'">Cancelar</button>':'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn s" style="background:#78AD8B" data-r="n" data-i="'+id+'">Aprobar y planificar tarea nueva</button><button class="btn g s d" data-r="xo" data-i="'+id+'">Desaprobar</button>'):'<button class="btn s" data-r="c" data-i="'+id+'">Confirmar</button>')+'</div></div>';
   return h}).join(''):'<div class="em">No hay tareas para revisar.</div>';
 }
 $('vL').addEventListener('input',function(e){var d=e.target.dataset;if(!d.c)return;if(d.f){(vx[d.c]=vx[d.c]||{})[d.f]=e.target.value;if(d.f==='ac')renderV()}else vc[d.c]=e.target.value});
@@ -1471,6 +1488,7 @@ $('vL').addEventListener('click',function(e){
  var id=+b.dataset.i,t=tasks.filter(function(x){return x.id===id})[0];if(!t)return;
  if(b.dataset.r==='xo'){vd[id]=1;renderV();return}
  if(b.dataset.r==='xc'){delete vd[id];delete vc[id];renderV();return}
+ if(b.dataset.r==='n'){openDv(t,true);return}
  var r=b.dataset.r,k=t.estado==='hecha'?'h':t.estado==='incompleto'?'i':'n',com=String(vc[id]||'').trim(),x=vx[id]||{};
  var ac=x.ac||(k==='i'?'Crear OT que continúa':'No crear OT por ahora'),crear=/^Crear/.test(ac)&&r!=='a';
  var rv=me.nombre,ahora=new Date().toISOString();
@@ -1501,6 +1519,30 @@ $('vL').addEventListener('click',function(e){
   fin(n);
  });
 });
+var DVID=null,DVAP=false;
+function openDv(t,ap){DVID=t.id;DVAP=ap;
+ $('dvO').textContent='Surge de '+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
+ $('dvF').textContent=t.fb||'—';
+ $('dvT').value='';$('dvTp').innerHTML=TIPOS.map(function(x){return '<option'+(x==='Correctivo programado'?' selected':'')+'>'+esc(x)+'</option>'}).join('');
+ $('dvPr').value='media';$('dvAr').value=t.area||'';$('dvEq').value=t.equipo||'';$('dvPa').value=t.parte||'';$('dvDe').value='';
+ $('dvRe').innerHTML='<option value="">Seleccionar</option>'+RESPONSABLES.map(function(x){return '<option>'+esc(x)+'</option>'}).join('');
+ $('dvFe').value=dstr(jd());$('dvTu').value=turnoNow();$('dvEs').value='';
+ [].forEach.call($('dvp').querySelectorAll('.bad'),function(e){e.classList.remove('bad')});
+ $('dvp').hidden=false}
+$('dvX').onclick=function(){$('dvp').hidden=true};
+$('dvOk').onclick=function(){var t=tasks.filter(function(x){return x.id===DVID})[0];if(!t||!me||me.rol!=='supervisor')return;
+ if(!need([['dvT','Título'],['dvDe','Detalle de tarea'],['dvRe','Responsable'],['dvFe','Fecha'],['dvTu','Turno'],['dvEs','Tiempo estimado',1]]))return;
+ var bt=$('dvOk');bt.disabled=true;var rv=me.nombre,ahora=new Date().toISOString(),tp=$('dvTp').value,res=$('dvRe').value,tit=$('dvT').value.trim();
+ nextOT(function(n){
+  saveTask({id:Date.now(),ot:n,titulo:tit,tipo:tp,equipo:$('dvEq').value.trim(),parte:$('dvPa').value.trim(),sub:'',area:$('dvAr').value.trim(),resp:res,contr:false,contrNom:'',detalle:$('dvDe').value.trim(),prio:$('dvPr').value,estado:'pendiente',fecha:$('dvFe').value,est:(+$('dvEs').value)/60,real:'',turno:$('dvTu').value,horaFalla:'',horaCarga:hhmm(),parts:[],pedir:[],fb:'',fotos:[],cre:rv,derivDe:t.ot,derivTit:t.titulo});
+  var h=(t.hist||[]).slice();
+  if(DVAP){h.push({rev:'aprobada',por:rv,fec:ahora,com:'',nueva:''});t.rev='aprobada';t.revPor=rv;t.revFec=ahora;t.revCom=''}
+  h.push({rev:'derivada',por:rv,fec:ahora,com:'',nueva:n});t.hist=h;saveTask(t);
+  if(DVAP)relDone(t);
+  if(res!==rv)notify(res,fmt(n)+' fue planificada por '+rv+' a partir de '+fmt(t.ot)+': '+tit);
+  bt.disabled=false;$('dvp').hidden=true;render();renderV();msg((DVAP?'Tarea aprobada; ':'')+'se planificó '+fmt(n));
+ });
+};
 var RBID=null;
 $('rbX').onclick=function(){$('rbp').hidden=true};
 $('rbOk').onclick=function(){var t=tasks.filter(function(x){return x.id===RBID})[0],m=$('rbM').value.trim();if(!t||!me||me.rol!=='supervisor')return;if(!m){$('rbM').classList.add('bad');$('rbM').focus();warn('Por favor, escriba el motivo de la reapertura.');return}if(t.rev==='aprobada'){warn('Una tarea aprobada no se puede reabrir.');return}
