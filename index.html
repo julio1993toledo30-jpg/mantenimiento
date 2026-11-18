@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.15 · 17/11/2026 22:46">
+<meta name="app-version" content="V2.16 · 18/11/2026 19:00">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -330,6 +330,7 @@ body{background:#fff}
 <label>Detalle de tarea <b class="rq">*</b><textarea id="dvDe" rows="3" placeholder="Qué hay que hacer, herramientas, advertencias"></textarea></label>
 <div class="g2"><label>Responsable <b class="rq">*</b><select id="dvRe"></select></label><label>Fecha <b class="rq">*</b><input type="date" id="dvFe"></label></div>
 <div class="g2"><label>Turno <b class="rq">*</b><select id="dvTu"><option>Mañana</option><option>Tarde</option><option>Noche</option></select></label><label>Tiempo estimado (min) <b class="rq">*</b><input type="number" min="1" id="dvEs" inputmode="numeric"></label></div>
+<div class="sm" id="dvSm"></div>
 <div class="ac"><button class="btn" id="dvOk">Planificar tarea</button><button class="btn g" id="dvX">Cancelar</button></div>
 </div>
 <div class="pan" id="rbp" hidden>
@@ -889,6 +890,15 @@ function renderLoad(){
 }
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-ld]');if(!b)return;var f=LDD||$('fD').value||dstr(jd()),n=b.getAttribute('data-ld');LDD=n==='0'?'':addD(f,+n);renderLoad()});
 document.addEventListener('change',function(e){var i=e.target;if(i&&i.hasAttribute&&i.hasAttribute('data-ldi')){LDD=i.value||'';renderLoad()}});
+function capLine(r,f,m,el){
+ if(r==='Contratista'){el.textContent='Orden para contratista: no cuenta en la carga de ningún técnico.';el.style.borderLeftColor='var(--ln)';return}
+ if(!r||!f){el.textContent='Elija responsable y fecha para ver el tiempo disponible del técnico.';el.style.borderLeftColor='var(--ln)';return}
+ var MT=metaFor(r,f),ex=loadMin(r,f,null),libre=MT-ex,left=libre-m;
+ if(MT===0){el.innerHTML='<b style="color:var(--rd)">'+esc(r)+' figura ausente ese día (Novedades del personal).</b>';el.style.borderLeftColor='var(--rd)';return}
+ el.innerHTML=esc(r)+' · '+esc(dmy(f))+': tiempo disponible <b>'+Math.max(0,libre)+' min</b> (ya asignado '+ex+' de '+MT+')'+(libre<0?' · <b style="color:var(--rd)">ya excedido en '+(-libre)+' min</b>':'')+(m>0?'<br>Con esta tarea ('+m+' min): '+(left>=0?'quedan <b>'+left+' min</b>':'<b style="color:var(--rd)">se excede en '+(-left)+' min</b>'):'');
+ el.style.borderLeftColor=(m>0?left<0:libre<0)?'var(--rd)':'var(--ok)'}
+function sumDv(){var el=$('dvSm');if(el)capLine($('dvRe').value,$('dvFe').value,+$('dvEs').value||0,el)}
+function sumV(id){var el=document.querySelector('[data-sm="'+id+'"]');if(!el)return;var x=vx[id]||{},t=tasks.filter(function(y){return y.id===id})[0]||{};capLine(x.r||'',x.f||dstr(jd()),x.es!=null&&x.es!==''?+x.es:(t.est===''||t.est==null?0:mn(t.est)),el)}
 function sumF(){
  var r=$('fRe').value,f=$('fFe').value,m=+$('fEs').value||0,el=$('fSm');
  if(r==='Contratista'){el.textContent='Orden para contratista: no cuenta en la carga de ningún técnico.';el.style.borderLeftColor='var(--ln)';return}
@@ -1542,16 +1552,17 @@ function renderV(){
   if((t.fotos||[]).length)h+='<div class="fl">'+t.fotos.map(function(x){return '<img class="im" alt="Foto" src="'+fsrc(x)+'">'}).join('')+'</div>';
   var x=vx[t.id]||{},id=t.id,sl=function(f,lb,opts,cur,ph){return '<label class="lb">'+lb+'<select class="vs" data-c="'+id+'" data-f="'+f+'">'+(ph?'<option value="">'+ph+'</option>':'')+opts.map(function(n){return '<option'+(cur===n?' selected':'')+'>'+esc(n)+'</option>'}).join('')+'</select></label>'};
   var ao=k==='h'?['No crear OT nueva por ahora','Crear OT nueva']:k==='i'?['Crear OT que continúa','No crear OT por ahora']:['No crear OT por ahora','Crear OT que reprograma'];
-  var cr=/^Crear/.test(x.ac||ao[0]),dz=k==='h'&&!!vd[id];
+  var cr=k!=='n'&&/^Crear/.test(x.ac||ao[0]),dz=k==='h'&&!!vd[id];
   if(k!=='h'||dz){
-   h+='<div class="lb" style="margin-top:10px"><b>'+(dz?'Desaprobar: indique qué corregir':'Decisión')+'</b></div>'+sl('ac','Qué hacer con la OT *',ao,x.ac||ao[0])+'<label class="lb">'+(dz?'Qué hay que corregir *':'Comentario (obligatorio si crea OT nueva)')+'<input class="vc" data-c="'+id+'" placeholder="Indicación o comentario" value="'+esc(vc[id]||'')+'"></label>';
-   if(cr)h+='<div class="lb" style="margin-top:8px"><b>Datos de la OT nueva</b></div>'+sl('r','Responsable de la OT nueva (puede ser otro técnico)',RESPONSABLES,x.r||'','Elegir responsable')+'<div class="g2"><label class="lb">Fecha de la OT nueva<input type="date" class="vs" data-c="'+id+'" data-f="f" value="'+(x.f||dstr(jd()))+'"></label>'+sl('tn','Turno de la OT nueva',['Mañana','Tarde','Noche'],x.tn||turnoNow())+'</div><div class="g2">'+sl('pr','Prioridad',['baja','media','alta','critica'],x.pr||t.prio||'media')+'<label class="lb">Tiempo estimado de la OT nueva (min)<input type="number" min="1" class="vs" data-c="'+id+'" data-f="es" inputmode="numeric" value="'+(x.es!=null?x.es:(t.est===''||t.est==null?'':mn(t.est)))+'"></label></div>'+sl('tp','Tipo',TIPOS,x.tp||(TIPOS.indexOf(t.tipo)>=0?t.tipo:'Correctivo no programado'));
+   h+='<div class="lb" style="margin-top:10px"><b>'+(dz?'Desaprobar: indique qué corregir':'Decisión')+'</b></div>'+(k==='n'?'':sl('ac','Qué hacer con la OT *',ao,x.ac||ao[0]))+'<label class="lb">'+(dz?'Qué hay que corregir *':k==='n'?'Comentario (opcional)':'Comentario (obligatorio si crea OT nueva)')+'<input class="vc" data-c="'+id+'" placeholder="Indicación o comentario" value="'+esc(vc[id]||'')+'"></label>';
+   if(cr)h+='<div class="lb" style="margin-top:8px"><b>Datos de la OT nueva</b></div>'+sl('r','Responsable de la OT nueva (puede ser otro técnico)',RESPONSABLES,x.r||'','Elegir responsable')+'<div class="g2"><label class="lb">Fecha de la OT nueva<input type="date" class="vs" data-c="'+id+'" data-f="f" value="'+(x.f||dstr(jd()))+'"></label>'+sl('tn','Turno de la OT nueva',['Mañana','Tarde','Noche'],x.tn||turnoNow())+'</div><div class="g2">'+sl('pr','Prioridad',['baja','media','alta','critica'],x.pr||t.prio||'media')+'<label class="lb">Tiempo estimado de la OT nueva (min)<input type="number" min="1" class="vs" data-c="'+id+'" data-f="es" inputmode="numeric" value="'+(x.es!=null?x.es:(t.est===''||t.est==null?'':mn(t.est)))+'"></label></div><div class="sm" data-sm="'+id+'"></div>'+sl('tp','Tipo',TIPOS,x.tp||(TIPOS.indexOf(t.tipo)>=0?t.tipo:'Correctivo no programado'));
   }
   h+='<button class="btn g s" data-r="p" data-i="'+id+'" style="margin-top:10px">Pedir repuestos</button>';
-  h+='<div class="ac">'+(k==='h'?(dz?'<button class="btn s d" data-r="x" data-i="'+id+'">Confirmar desaprobación</button><button class="btn g s" data-r="xc" data-i="'+id+'">Cancelar</button>':'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn s" style="background:#78AD8B" data-r="n" data-i="'+id+'">Aprobar y planificar tarea nueva</button><button class="btn g s d" data-r="xo" data-i="'+id+'">Desaprobar</button>'):'<button class="btn s" data-r="c" data-i="'+id+'">Confirmar</button>')+'</div></div>';
+  h+='<div class="ac">'+(k==='h'?(dz?'<button class="btn s d" data-r="x" data-i="'+id+'">Confirmar desaprobación</button><button class="btn g s" data-r="xc" data-i="'+id+'">Cancelar</button>':'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn s" style="background:#78AD8B" data-r="n" data-i="'+id+'">Aprobar y planificar tarea nueva</button><button class="btn g s d" data-r="xo" data-i="'+id+'">Desaprobar</button>'):'<button class="btn s" data-r="c" data-i="'+id+'">Confirmar</button>'+(k==='n'?'<button class="btn s" style="background:#78AD8B" data-r="rp" data-i="'+id+'">Reprogramar tarea</button>':''))+'</div></div>';
   return h}).join(''):'<div class="em">No hay tareas para revisar.</div>';
+ [].forEach.call($('vL').querySelectorAll('[data-sm]'),function(e){sumV(+e.getAttribute('data-sm'))});
 }
-$('vL').addEventListener('input',function(e){var d=e.target.dataset;if(!d.c)return;if(d.f){(vx[d.c]=vx[d.c]||{})[d.f]=e.target.value;if(d.f==='ac')renderV()}else vc[d.c]=e.target.value});
+$('vL').addEventListener('input',function(e){var d=e.target.dataset;if(!d.c)return;if(d.f){(vx[d.c]=vx[d.c]||{})[d.f]=e.target.value;if(d.f==='ac')renderV();else if(d.f==='r'||d.f==='f'||d.f==='es')sumV(+d.c)}else vc[d.c]=e.target.value});
 $('vL').addEventListener('click',function(e){
  if(e.target.classList.contains('im')){e.target.classList.toggle('big');return}
  var b=e.target.closest('button');if(!b||!b.dataset.r)return;
@@ -1561,8 +1572,9 @@ $('vL').addEventListener('click',function(e){
  if(b.dataset.r==='xo'){vd[id]=1;renderV();return}
  if(b.dataset.r==='xc'){delete vd[id];delete vc[id];renderV();return}
  if(b.dataset.r==='n'){openDv(t,true);return}
+ if(b.dataset.r==='rp'){if(t.estado==='noreal')openDv(t,false,null,true);return}
  var r=b.dataset.r,k=t.estado==='hecha'?'h':t.estado==='incompleto'?'i':'n',com=String(vc[id]||'').trim(),x=vx[id]||{};
- var ac=x.ac||(k==='i'?'Crear OT que continúa':'No crear OT por ahora'),crear=/^Crear/.test(ac)&&r!=='a';
+ var ac=x.ac||(k==='i'?'Crear OT que continúa':'No crear OT por ahora'),crear=/^Crear/.test(ac)&&r!=='a'&&k!=='n';
  var rv=me.nombre,ahora=new Date().toISOString();
  function bad(){var ci=document.querySelector('.vc[data-c="'+id+'"]');if(ci){ci.classList.add('bad');ci.focus()}}
  if(r==='x'&&!com){bad();warn('Por favor, escriba el comentario que indique qué debe corregirse.');return}
@@ -1597,17 +1609,25 @@ function dvAuto(){var t=tasks.filter(function(x){return x.id===DVID})[0];if(!t||
  if(!DVD.t)$('dvT').value=sel.length?(sel.length===1?'Instalar '+nm(sel[0]):'Instalar repuestos: '+sel.map(function(j){return t.pedir[j].n}).join(', ')):'';
  if(!DVD.d)$('dvDe').value=sel.length?'Instalar los repuestos que llegaron para la '+fmt(t.ot)+' («'+t.titulo+'»): '+sel.map(nm).join(', ')+'.':''}
 var DVS={};
-function openDv(t,ap,inst){DVID=t.id;DVAP=ap;DVJ=inst&&inst.length?inst.slice():null;DVD={t:0,d:0};DVS={};
- $('dvO').textContent=(DVJ?'Instalar lo que llegó de ':'Surge de ')+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
+var DVR=false;
+function openDv(t,ap,inst,rep){DVID=t.id;DVAP=ap;DVR=!!rep;DVJ=inst&&inst.length?inst.slice():null;DVD={t:0,d:0};DVS={};
+ document.querySelector('#dvp h2').textContent=DVR?'Reprogramar tarea':'Planificar tarea nueva';$('dvOk').textContent=DVR?'Reprogramar':'Planificar tarea';
+ $('dvO').textContent=(DVJ?'Instalar lo que llegó de ':DVR?'Reprograma ':'Surge de ')+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
  $('dvI').hidden=!DVJ;if(DVJ){DVJ.forEach(function(j){DVS[j]=true});$('dvIL').innerHTML=DVJ.map(function(j){var p=t.pedir[j];return '<label class="ck"><input type="checkbox" data-dj2="'+j+'" checked> '+esc(p.n)+(p.d?' · '+esc(p.d):'')+' <b>× '+esc(p.q)+'</b></label>'}).join('')}
  $('dvF').textContent=t.fb||'—';
  $('dvT').value='';$('dvTp').innerHTML=TIPOS.map(function(x){var df=DVJ?'Correctivo no programado':'Correctivo programado';return '<option'+(x===df?' selected':'')+'>'+esc(x)+'</option>'}).join('');
  $('dvPr').value='media';$('dvAr').value=t.area||'';$('dvEq').value=t.equipo||'';$('dvPa').value=t.parte||'';$('dvDe').value='';
  $('dvRe').innerHTML='<option value="">Seleccionar</option>'+RESPONSABLES.map(function(x){return '<option>'+esc(x)+'</option>'}).join('');
  $('dvFe').value=dstr(jd());$('dvTu').value=turnoNow();$('dvEs').value='';if(DVJ)dvAuto();
+ if(DVR){var cm=String(vc[t.id]||'').trim();$('dvT').value=String(t.titulo).replace(/^(Rehacer|Continúa|Reprograma): /,'');DVD.t=1;
+  if(TIPOS.indexOf(t.tipo)>=0)$('dvTp').value=t.tipo;$('dvPr').value=t.prio||'media';
+  $('dvDe').value=(cm?'Indicación de '+me.nombre+': '+cm+'\n\n':'')+(t.detalle||'');DVD.d=1;
+  if(RESPONSABLES.indexOf(t.resp)>=0)$('dvRe').value=t.resp;$('dvFe').value=addD(dstr(jd()),1);$('dvTu').value=t.turno||turnoNow();$('dvEs').value=t.est===''||t.est==null?'':mn(t.est)}
+ sumDv();
  [].forEach.call($('dvp').querySelectorAll('.bad'),function(e){e.classList.remove('bad')});
  $('dvp').hidden=false}
 $('dvX').onclick=function(){$('dvp').hidden=true};
+['input','change'].forEach(function(ev){['dvRe','dvFe','dvEs'].forEach(function(i){$(i).addEventListener(ev,sumDv)})});
 $('dvIL').addEventListener('change',function(e){var j=e.target.dataset.dj2;if(j!=null){DVS[j]=e.target.checked;dvAuto()}});
 $('dvT').addEventListener('input',function(){DVD.t=1});$('dvDe').addEventListener('input',function(){DVD.d=1});
 $('dvOk').onclick=function(){var t=tasks.filter(function(x){return x.id===DVID})[0];if(!t||!me||me.rol!=='supervisor')return;
@@ -1615,6 +1635,12 @@ $('dvOk').onclick=function(){var t=tasks.filter(function(x){return x.id===DVID})
  var selJ=DVJ?DVJ.filter(function(j){return DVS[j]&&t.pedir[j]&&t.pedir[j].lleg&&!t.pedir[j].inst}):[];
  if(DVJ&&!selJ.length){warn('Por favor, elija al menos un repuesto para instalar.');return}
  var bt=$('dvOk');bt.disabled=true;var rv=me.nombre,ahora=new Date().toISOString(),tp=$('dvTp').value,res=$('dvRe').value,tit=$('dvT').value.trim();
+ if(DVR){var cm2=String(vc[t.id]||'').trim();nextOT(function(n){
+  saveTask({id:Date.now(),ot:n,titulo:tit,tipo:tp,equipo:$('dvEq').value.trim(),parte:$('dvPa').value.trim(),sub:t.sub||'',area:$('dvAr').value.trim(),resp:res,contr:false,contrNom:'',detalle:$('dvDe').value.trim(),prio:$('dvPr').value,estado:'pendiente',fecha:$('dvFe').value,est:(+$('dvEs').value)/60,real:'',turno:$('dvTu').value,horaFalla:tp==='Correctivo no programado'?(t.horaFalla||''):'',horaCarga:hhmm(),parts:[],pedir:[],fb:'',fotos:[],cre:rv,rehaceDe:t.ot,rehaceTxt:'Reprograma',revPor:rv,revCom:cm2});
+  t.hist=(t.hist||[]).concat([{rev:'revisada',por:rv,fec:ahora,com:cm2,nueva:n}]);t.rev='revisada';t.revPor=rv;t.revFec=ahora;t.revCom=cm2;t.revNueva=n;
+  delete vc[t.id];delete vx[t.id];saveTask(t);
+  if(res!==rv)notify(res,fmt(n)+' fue reprogramada por '+rv+' a partir de '+fmt(t.ot)+': '+tit);
+  bt.disabled=false;$('dvp').hidden=true;render();renderV();msg('Se reprogramó como '+fmt(n))});return}
  nextOT(function(n){
   saveTask({id:Date.now(),ot:n,titulo:tit,tipo:tp,equipo:$('dvEq').value.trim(),parte:$('dvPa').value.trim(),sub:'',area:$('dvAr').value.trim(),resp:res,contr:false,contrNom:'',detalle:$('dvDe').value.trim(),prio:$('dvPr').value,estado:'pendiente',fecha:$('dvFe').value,est:(+$('dvEs').value)/60,real:'',turno:$('dvTu').value,horaFalla:'',horaCarga:hhmm(),parts:DVJ?selJ.map(function(j){var q=t.pedir[j];return{n:q.n,d:q.d||'',q:q.q}}):[],pedir:[],fb:'',fotos:[],cre:rv,derivDe:t.ot,derivTit:t.titulo});
   if(DVJ){selJ.forEach(function(j){t.pedir[j].inst=n});saveTask(t);if(res!==rv)notify(res,fmt(n)+' fue planificada por '+rv+' para instalar repuestos de '+fmt(t.ot)+': '+tit);bt.disabled=false;$('dvp').hidden=true;render();if(!$('vp').hidden)renderV();if(!$('lgp').hidden)drawLG();msg('Se planificó '+fmt(n));return}
