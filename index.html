@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.12 · 17/11/2026 19:45">
+<meta name="app-version" content="V2.15 · 17/11/2026 22:46">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -51,6 +51,8 @@ details.fl2>summary::-webkit-details-marker{display:none}
 .pan[hidden],#err[hidden],label[hidden],#okm[hidden],#upd[hidden]{display:none}
 .pan:not([hidden]){position:fixed;inset:0;z-index:30;overflow:auto;background:var(--bg);padding:max(14px,env(safe-area-inset-top)) max(16px,calc((100% - 728px)/2)) calc(96px + env(safe-area-inset-bottom))}
 #dvp:not([hidden]),#rbp:not([hidden]),#prp:not([hidden]),#dcp:not([hidden]){z-index:40}
+#lgp:not([hidden]){z-index:35}
+.pvc{width:22px;height:22px}
 .ac2{display:flex;flex-direction:column;gap:8px;margin-top:10px}.ac2>.btn{width:100%}
 .g3b{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}.g3b .btn{padding:6px 4px;font-size:13px;line-height:1.15;width:100%}
 .mas{border:1px solid var(--ln);border-radius:10px}.mas summary{cursor:pointer;color:var(--mu);font-weight:700;padding:11px;text-align:center;list-style:none;min-height:44px}.mas summary::-webkit-details-marker{display:none}.mas .btn{display:block;margin:0 8px 8px;width:calc(100% - 16px)}
@@ -319,6 +321,7 @@ body{background:#fff}
 <h2>Planificar tarea nueva</h2>
 <div class="mt" id="dvO" style="margin-bottom:10px"></div>
 <div class="lb">Feedback de la tarea original (para guiarse)</div><div class="det" id="dvF" style="margin-bottom:10px"></div>
+<div id="dvI" hidden><div class="lb">Repuestos que llegaron: elija cuáles se instalan en esta OT</div><div id="dvIL"></div></div>
 <div class="lgq"><b class="rq">*</b> Obligatorio.</div>
 <label>Título <b class="rq">*</b><input id="dvT" placeholder="Qué hay que hacer"></label>
 <div class="g2"><label>Tipo de mantenimiento <b class="rq">*</b><select id="dvTp"></select></label><label>Prioridad <b class="rq">*</b><select id="dvPr"><option>baja</option><option selected>media</option><option>alta</option><option>critica</option></select></label></div>
@@ -342,7 +345,7 @@ body{background:#fff}
 <h2>Pedir repuestos</h2>
 <div class="mt" id="prT" style="margin-bottom:12px"></div>
 <div class="lgq"><b class="rq">*</b> Obligatorio el nombre del repuesto. La cantidad es de 1 en adelante.</div>
-<div id="prL"></div>
+<div id="prW"></div>
 <button class="btn g s" data-add="prow">Agregar repuesto</button>
 <div class="mt" id="prM" style="margin:10px 0"></div>
 <div class="ac"><button class="btn" id="prOk">Enviar solicitud al coordinador</button><button class="btn g" id="prX">Cancelar</button></div>
@@ -378,9 +381,6 @@ body{background:#fff}
 <div class="sec">Repuestos utilizados <small>(opcional)</small></div>
 <div id="qpL"></div>
 <button class="btn g s" data-add="qparts">Agregar repuesto</button>
-<div class="sec">Repuestos a pedir <small>(opcional)</small></div>
-<div id="qoL"></div>
-<button class="btn g s" data-add="qpedir">Agregar repuesto</button>
 <div class="sec">Fotos <small>(opcional)</small></div>
 <div class="fb"><label class="btn g s">Tomar foto<input type="file" id="qFc" accept="image/*" capture="environment"></label><label class="btn g s">Elegir de la galería<input type="file" id="qFo" accept="image/*" multiple></label></div>
 <div id="qMsg" role="status"></div>
@@ -603,6 +603,14 @@ body{background:#fff}
 <div class="ac"><button class="btn" id="pvC">Copiar para correo</button><button class="btn g" id="pvP">Imprimir / PDF</button></div>
 </div>
 
+<div class="pan" id="lgp" hidden>
+<button class="bk" data-bk="lgp">‹ Volver</button>
+<h2>Llegaron repuestos</h2>
+<div class="mt" style="margin-bottom:12px">Si hay que instalarlos, puede crear una OT por cada orden de origen. No se crea nada hasta que usted confirme cada formulario.</div>
+<div id="lgG"></div>
+<div class="ac"><button class="btn g" id="lgX">Listo, más tarde</button></div>
+</div>
+
 <div class="pan" id="sp" hidden>
 <button class="bk" data-bk="sp">‹ Volver</button>
 <h2>Solicitar vacaciones o permiso</h2>
@@ -703,9 +711,6 @@ body{background:#fff}
 <div class="sec">Repuestos utilizados <small>(opcional)</small></div>
 <div id="pL"></div>
 <button class="btn g s" data-add="parts">Agregar repuesto</button>
-<div class="sec">Repuestos a pedir <small>(opcional)</small></div>
-<div id="oL"></div>
-<button class="btn g s" data-add="pedir">Agregar repuesto</button>
 <label style="margin-top:14px">Feedback: qué se hizo y cómo quedó <small class="op">al cerrar; si quedó incompleta o no se hizo, contá el motivo</small><textarea id="fFb" rows="3" placeholder="Qué se hizo, cómo quedó, observaciones"></textarea></label>
 <div class="sec">Fotos <small>(opcional)</small></div>
 <div class="fb"><label class="btn g s">Tomar foto<input type="file" id="fFc" accept="image/*" capture="environment"></label><label class="btn g s">Elegir de la galería<input type="file" id="fFo" accept="image/*" multiple></label></div>
@@ -812,18 +817,23 @@ function tbl(a,id,ck){
  return '<table><tr><th>Repuesto</th><th>Descripción</th><th class="n">Cant.</th>'+(ck?'<th class="n">Pedido</th>':'')+'</tr>'+r+'</table>';
 }
 function sec(l,h){return h?'<div class="lb">'+l+'</div>'+h:''}
-function pedSt(p){if(p.ok)return chp('#78AD8B','Pedido'+(p.ped?' '+fmtP(p.ped):''));
+function pedSt(p){if(p.lleg)return chp('#78AD8B','Llegó'+(p.llegFec?' · '+dmy(String(p.llegFec).slice(0,10)):''));
+ if(p.ok)return chp('#78AD8B','Pedido'+(p.ped?' '+fmtP(p.ped):''));
  if(p.dec==='stock')return chp('#78AD8B','Hay en stock');if(p.dec==='otra')return chp('#7FA3D1','Otra solución');if(p.dec==='rechazo')return chp('#D17F78','Rechazado');if(p.dec==='comprar')return chp('#E08A2E','Comprar · esperando');
  return chp('#D6B85F',p.sol?'Solicitado · sin revisar':'Sin revisar')}
-function pedH(t){
+function pedH(t,ro){
  var a=(t.pedir||[]),h='',k=0;
  a.forEach(function(p,j){if(!(p.n||p.d))return;k++;
   h+='<div class="pit"><b>'+esc(p.n)+'</b>'+(p.d?' · '+esc(p.d):'')+' · ×'+esc(p.q)+(p.sol?'<div class="mt">Pidió '+esc(p.sol)+(p.solFec?' · '+esc(dmy(String(p.solFec).slice(0,10))):'')+'</div>':'')+'<div>'+pedSt(p)+'</div>';
+  if(p.inst)h+='<div class="mt">Se instala en '+fmt(p.inst)+'</div>';
   if(p.nota)h+='<div class="pnt">'+(p.decPor?esc(p.decPor)+': ':'')+esc(p.nota)+'</div>';
-  if(me&&p.sol&&p.sol===me.nombre&&!p.dec&&!p.ok)h+='<button class="btn g s" data-a="pcan" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px">Cancelar este pedido</button>';
+  if(!ro&&me&&me.rol==='supervisor'&&esp(p))h+='<button class="btn s" data-a="lleg" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px;background:#78AD8B">Marcar que llegó</button>';
+  if(!ro&&me&&me.rol==='supervisor'&&p.lleg)h+='<button class="btn g s" data-a="nolleg" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px">Quitar «Llegó» (fue un error)</button>';
+  if(!ro&&me&&p.sol&&p.sol===me.nombre&&!p.dec&&!p.ok)h+='<button class="btn g s" data-a="pcan" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px">Cancelar este pedido</button>';
   h+='</div>'});
  if(!k)return '';
- if(me&&me.rol==='supervisor'&&nDec(t))h+='<button class="btn s" data-a="dec" data-i="'+t.id+'" style="margin-top:8px">Decidir repuestos ('+nDec(t)+')</button>';
+ if(!ro&&me&&me.rol==='supervisor'&&pend2(t).length)h+='<button class="btn s" data-a="oti" data-i="'+t.id+'" style="margin-top:8px">Crear OT con lo que llegó ('+pend2(t).length+')</button>';
+ if(!ro&&me&&me.rol==='supervisor'&&nDec(t))h+='<button class="btn s" data-a="dec" data-i="'+t.id+'" style="margin-top:8px">Decidir repuestos ('+nDec(t)+')</button>';
  return h}
 function inRange(f,p){
  if(p==='all')return true;
@@ -894,7 +904,10 @@ function tmChip(t){var e=mn(t.est),has=t.real!==''&&t.real!=null;if(!has)return 
  if(t.estado==='noreal')return chp('#A0A8B1','Plan '+e+' · Real '+r+' min');
  return chp(d===0?'#78AD8B':d>0?'#D17F78':'#E08A2E','Plan '+e+' · Real '+r+' min'+(d?' ('+(d>0?'+':'−')+Math.abs(d)+')':''))}
 function chp(c,x,p){return '<span class="tg" style="color:'+c+';background:'+c+'26;border-color:'+c+'55">'+(p?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
-function aPed(p){return p.n&&!p.ok&&(!p.dec||p.dec==='comprar')}
+function aPed(p){return p.n&&!p.ok&&!p.lleg&&(!p.dec||p.dec==='comprar')}
+function pend2(t){var o=[];(t.pedir||[]).forEach(function(p,j){if(p.n&&p.lleg&&!p.inst)o.push(j)});return o}
+function esp(p){return p.n&&!p.lleg&&(p.ok||p.dec==='comprar')}
+function nEsp(t){return (t.pedir||[]).filter(esp).length}
 function nPed(t){return (t.pedir||[]).filter(aPed).length}
 function nDec(t){return (t.pedir||[]).filter(function(p){return p.n&&!p.ok&&!p.dec}).length}
 function canE(t){return !!me&&!!me.rol&&(me.rol==='supervisor'||t.resp===me.nombre)}
@@ -907,6 +920,7 @@ function cardH(t){
  if(t.derivDe)h+='<div class="pd" style="background:#7FA3D126;border-color:#7FA3D166;color:#7FA3D1">Surgió de '+fmt(t.derivDe)+(t.derivTit?' «'+esc(t.derivTit)+'»':'')+'</div>';
  if(t.rehaceDe)h+='<div class="pd" style="background:#D17F7826;border-color:#D17F7866;color:#D17F78">'+(t.rehaceTxt||'Rehace')+' '+fmt(t.rehaceDe)+(t.revPor?' (indicó '+esc(t.revPor)+')':'')+(t.revCom?': '+esc(t.revCom):'')+'</div>';
  if(n)h+='<div class="pd"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.3"/><circle cx="17" cy="19" r="1.3"/></svg>Repuestos a pedir: '+n+'</div>';
+ if(nEsp(t))h+='<div class="pd" style="background:#7FA3D126;border-color:#7FA3D166;color:#7FA3D1">Repuestos esperando que lleguen: '+nEsp(t)+'</div>';
  if(me&&me.rol==='supervisor'&&nDec(t))h+='<div class="pd" style="background:#D6B85F26;border-color:#D6B85F66;color:#D6B85F">Repuestos por decidir: '+nDec(t)+'</div>';
  h+='<details class="mo" data-id="'+t.id+'"'+(openD[t.id]?' open':'')+'><summary>Ver detalle</summary>';
  h+=sec('Detalle de tarea',t.detalle&&'<div class="det">'+esc(t.detalle)+'</div>');
@@ -1237,13 +1251,13 @@ $('qC').onclick=function(){
  try{localStorage.setItem('mant-qw',w)}catch(e){}
  $('qC').disabled=true;
  nextOT(function(n){
-  saveTask({id:Date.now(),ot:n,titulo:ti,tipo:'Correctivo no programado',equipo:$('qEq').value.trim(),parte:$('qPa').value.trim(),sub:'',resp:w,contr:false,contrNom:'',detalle:$('qDe').value.trim(),prio:$('qPr').value,estado:$('qSt').value,fecha:dstr(jd()),est:(+$('qRl').value)/60,real:(+$('qRl').value)/60,turno:$('qTu').value,horaFalla:$('qHf').value,horaCarga:hhmm(),parts:okp(L.qparts),horas:$('qHm').value===''?'':+$('qHm').value,pedir:okp(L.qpedir),fb:$('qFb').value.trim(),fotos:qfotos.slice(),cre:w,motivo:($('qSt').value==='incompleto'?$('qMo').value:''),motivoOtro:($('qSt').value==='incompleto'&&$('qMo').value==='Otro'?$('qMoO').value.trim():'')});
+  saveTask({id:Date.now(),ot:n,titulo:ti,tipo:'Correctivo no programado',equipo:$('qEq').value.trim(),parte:$('qPa').value.trim(),sub:'',resp:w,contr:false,contrNom:'',detalle:$('qDe').value.trim(),prio:$('qPr').value,estado:$('qSt').value,fecha:dstr(jd()),est:(+$('qRl').value)/60,real:(+$('qRl').value)/60,turno:$('qTu').value,horaFalla:$('qHf').value,horaCarga:hhmm(),parts:okp(L.qparts),horas:$('qHm').value===''?'':+$('qHm').value,pedir:[],fb:$('qFb').value.trim(),fotos:qfotos.slice(),cre:w,motivo:($('qSt').value==='incompleto'?$('qMo').value:''),motivoOtro:($('qSt').value==='incompleto'&&$('qMo').value==='Otro'?$('qMoO').value.trim():'')});
   $('qC').disabled=false;$('qp').hidden=true;msg(fmt(n)+' creada');
  });
 };
 function rows(k){
  var F=[['n',k==='pitems'?'Ítem':'Repuesto'],['d','Descripción'],['q','Cant.']];
- $({parts:'pL',pedir:'oL',qparts:'qpL',qpedir:'qoL',pitems:'piL',prow:'prL'}[k]).innerHTML=L[k].map(function(p,i){
+ $({parts:'pL',pedir:'oL',qparts:'qpL',qpedir:'qoL',pitems:'piL',prow:'prW'}[k]).innerHTML=L[k].map(function(p,i){
   return '<div class="pr">'+F.map(function(f){return '<input data-l="'+k+'" data-k="'+f[0]+'" data-i="'+i+'"'+(f[0]==='q'?' type="number" min="1" step="1" inputmode="numeric"':'')+' value="'+esc(p[f[0]])+'" placeholder="'+f[1]+'" aria-label="'+f[1]+'">'}).join('')+'<button data-l="'+k+'" data-r="'+i+'" aria-label="Quitar repuesto">×</button>'+(k.slice(-5)==='pedir'&&me&&me.rol==='supervisor'?'<label class="ck"><input type="checkbox" data-l="pedir" data-k="ok" data-i="'+i+'"'+(p.ok?' checked':'')+'> Ya pedido</label>':'')+'</div>'}).join('');
 }
 function qphs(){$('qPh').innerHTML=qfotos.map(function(s,i){return '<div class="th"><img alt="Foto" src="'+fsrc(s)+'"><button data-xq="'+i+'" aria-label="Quitar foto">×</button></div>'}).join('')}
@@ -1264,7 +1278,7 @@ function open(t){
  $('fPr').value=t?t.prio:'media';$('fSt').value=t?t.estado:'pendiente';
  $('fFe').value=t?t.fecha:dstr(jd());
  L.parts=t?JSON.parse(JSON.stringify(t.parts||[])):[];L.pedir=t?JSON.parse(JSON.stringify(t.pedir||[])):[];fotos=t?(t.fotos||[]).slice():[];
- rows('parts');rows('pedir');$('fHm').value=t&&t.horas!=null?t.horas:'';phs();$('fFo').value='';sumF();setSel('fMo',MOTIVOS,t?t.motivo:'','Seleccionar');$('fHf').value=t&&t.horaFalla||'';togMo();
+ rows('parts');$('fHm').value=t&&t.horas!=null?t.horas:'';phs();$('fFo').value='';sumF();setSel('fMo',MOTIVOS,t?t.motivo:'','Seleccionar');$('fHf').value=t&&t.horaFalla||'';togMo();
  $('fAr').value=t&&t.area||'';$('fMoO').value=t&&t.motivoOtro||'';areaDL();tabSet(t&&me&&me.rol!=='supervisor'?2:1);togMo();
  $('pan').hidden=false;$('fTi').focus();$('pan').scrollIntoView({block:'start'});
 }
@@ -1355,6 +1369,11 @@ function onList(e){
  if(a==='del'&&!(me&&me.rol==='supervisor')){warn('Solo los coordinadores pueden borrar órdenes.');return}
  if(a==='ped'){if(me&&me.rol)openPR(t);return}
  if(a==='dec'){if(me&&me.rol==='supervisor')openDC(t);return}
+ if(a==='oti'){if(me&&me.rol==='supervisor'){var js=pend2(t);if(js.length)openDv(t,false,js)}return}
+ if(a==='lleg'||a==='nolleg'){var pj=+b.dataset.j,pq=(t.pedir||[])[pj];if(!pq||!me||me.rol!=='supervisor')return;
+  if(a==='lleg'){if(!esp(pq))return;pq.lleg=true;pq.llegPor=me.nombre;pq.llegFec=dstr(jd())+'T'+hhmm();saveTask(t);render();msg('Repuesto marcado como llegado');openLG([{t:t,j:pj}])}
+  else{delete pq.lleg;delete pq.llegPor;delete pq.llegFec;saveTask(t);render();msg('Se quitó «Llegó»')}
+  return}
  if(a==='pcan'){var jj=+b.dataset.j,pp=(t.pedir||[])[jj];if(!pp||!me||pp.sol!==me.nombre||pp.dec||pp.ok)return;t.pedir.splice(jj,1);saveTask(t);render();msg('Pedido cancelado');return}
  if(a==='deriv'){if(!(me&&me.rol==='supervisor')||t.estado!=='hecha')return;openDv(t,false);return}
  if(a==='reab'){if(!(me&&me.rol==='supervisor')||t.rev==='aprobada'||t.estado!=='hecha')return;RBID=t.id;$('rbT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo;$('rbM').value='';$('rbM').classList.remove('bad');$('rbp').hidden=false;return}
@@ -1519,7 +1538,7 @@ function renderV(){
   if(t.detalle)h+='<div class="lb">Detalle</div><div class="det">'+esc(t.detalle)+'</div>';
   h+='<div class="lb">Feedback del técnico</div><div class="det">'+(esc(t.fb)||'—')+'</div>';
   if((t.partes||[]).length)h+='<div class="lb">Partes anteriores</div><div class="det">'+esc(t.partes.map(function(p){return (p.tec||'')+' · '+mn(p.real)+' min · '+(p.fb||'sin feedback')}).join('\n'))+'</div>';
-  if(nPed(t))h+='<div class="pd">Repuestos a pedir: '+nPed(t)+'</div>';
+  h+=sec('Repuestos',pedH(t,1));
   if((t.fotos||[]).length)h+='<div class="fl">'+t.fotos.map(function(x){return '<img class="im" alt="Foto" src="'+fsrc(x)+'">'}).join('')+'</div>';
   var x=vx[t.id]||{},id=t.id,sl=function(f,lb,opts,cur,ph){return '<label class="lb">'+lb+'<select class="vs" data-c="'+id+'" data-f="'+f+'">'+(ph?'<option value="">'+ph+'</option>':'')+opts.map(function(n){return '<option'+(cur===n?' selected':'')+'>'+esc(n)+'</option>'}).join('')+'</select></label>'};
   var ao=k==='h'?['No crear OT nueva por ahora','Crear OT nueva']:k==='i'?['Crear OT que continúa','No crear OT por ahora']:['No crear OT por ahora','Crear OT que reprograma'];
@@ -1528,6 +1547,7 @@ function renderV(){
    h+='<div class="lb" style="margin-top:10px"><b>'+(dz?'Desaprobar: indique qué corregir':'Decisión')+'</b></div>'+sl('ac','Qué hacer con la OT *',ao,x.ac||ao[0])+'<label class="lb">'+(dz?'Qué hay que corregir *':'Comentario (obligatorio si crea OT nueva)')+'<input class="vc" data-c="'+id+'" placeholder="Indicación o comentario" value="'+esc(vc[id]||'')+'"></label>';
    if(cr)h+='<div class="lb" style="margin-top:8px"><b>Datos de la OT nueva</b></div>'+sl('r','Responsable de la OT nueva (puede ser otro técnico)',RESPONSABLES,x.r||'','Elegir responsable')+'<div class="g2"><label class="lb">Fecha de la OT nueva<input type="date" class="vs" data-c="'+id+'" data-f="f" value="'+(x.f||dstr(jd()))+'"></label>'+sl('tn','Turno de la OT nueva',['Mañana','Tarde','Noche'],x.tn||turnoNow())+'</div><div class="g2">'+sl('pr','Prioridad',['baja','media','alta','critica'],x.pr||t.prio||'media')+'<label class="lb">Tiempo estimado de la OT nueva (min)<input type="number" min="1" class="vs" data-c="'+id+'" data-f="es" inputmode="numeric" value="'+(x.es!=null?x.es:(t.est===''||t.est==null?'':mn(t.est)))+'"></label></div>'+sl('tp','Tipo',TIPOS,x.tp||(TIPOS.indexOf(t.tipo)>=0?t.tipo:'Correctivo no programado'));
   }
+  h+='<button class="btn g s" data-r="p" data-i="'+id+'" style="margin-top:10px">Pedir repuestos</button>';
   h+='<div class="ac">'+(k==='h'?(dz?'<button class="btn s d" data-r="x" data-i="'+id+'">Confirmar desaprobación</button><button class="btn g s" data-r="xc" data-i="'+id+'">Cancelar</button>':'<button class="btn s" data-r="a" data-i="'+id+'">Aprobar</button><button class="btn s" style="background:#78AD8B" data-r="n" data-i="'+id+'">Aprobar y planificar tarea nueva</button><button class="btn g s d" data-r="xo" data-i="'+id+'">Desaprobar</button>'):'<button class="btn s" data-r="c" data-i="'+id+'">Confirmar</button>')+'</div></div>';
   return h}).join(''):'<div class="em">No hay tareas para revisar.</div>';
 }
@@ -1537,6 +1557,7 @@ $('vL').addEventListener('click',function(e){
  var b=e.target.closest('button');if(!b||!b.dataset.r)return;
  if(!me||me.rol!=='supervisor')return;
  var id=+b.dataset.i,t=tasks.filter(function(x){return x.id===id})[0];if(!t)return;
+ if(b.dataset.r==='p'){openPR(t);return}
  if(b.dataset.r==='xo'){vd[id]=1;renderV();return}
  if(b.dataset.r==='xc'){delete vd[id];delete vc[id];renderV();return}
  if(b.dataset.r==='n'){openDv(t,true);return}
@@ -1571,21 +1592,32 @@ $('vL').addEventListener('click',function(e){
  });
 });
 var DVID=null,DVAP=false;
-function openDv(t,ap){DVID=t.id;DVAP=ap;
- $('dvO').textContent='Surge de '+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
+var DVJ=null,DVD={t:0,d:0};
+function dvAuto(){var t=tasks.filter(function(x){return x.id===DVID})[0];if(!t||!DVJ)return;var sel=DVJ.filter(function(j){return DVS[j]}),nm=function(j){var p=t.pedir[j];return p.n+(p.d?' '+p.d:'')+' ×'+p.q};
+ if(!DVD.t)$('dvT').value=sel.length?(sel.length===1?'Instalar '+nm(sel[0]):'Instalar repuestos: '+sel.map(function(j){return t.pedir[j].n}).join(', ')):'';
+ if(!DVD.d)$('dvDe').value=sel.length?'Instalar los repuestos que llegaron para la '+fmt(t.ot)+' («'+t.titulo+'»): '+sel.map(nm).join(', ')+'.':''}
+var DVS={};
+function openDv(t,ap,inst){DVID=t.id;DVAP=ap;DVJ=inst&&inst.length?inst.slice():null;DVD={t:0,d:0};DVS={};
+ $('dvO').textContent=(DVJ?'Instalar lo que llegó de ':'Surge de ')+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
+ $('dvI').hidden=!DVJ;if(DVJ){DVJ.forEach(function(j){DVS[j]=true});$('dvIL').innerHTML=DVJ.map(function(j){var p=t.pedir[j];return '<label class="ck"><input type="checkbox" data-dj2="'+j+'" checked> '+esc(p.n)+(p.d?' · '+esc(p.d):'')+' <b>× '+esc(p.q)+'</b></label>'}).join('')}
  $('dvF').textContent=t.fb||'—';
- $('dvT').value='';$('dvTp').innerHTML=TIPOS.map(function(x){return '<option'+(x==='Correctivo programado'?' selected':'')+'>'+esc(x)+'</option>'}).join('');
+ $('dvT').value='';$('dvTp').innerHTML=TIPOS.map(function(x){var df=DVJ?'Correctivo no programado':'Correctivo programado';return '<option'+(x===df?' selected':'')+'>'+esc(x)+'</option>'}).join('');
  $('dvPr').value='media';$('dvAr').value=t.area||'';$('dvEq').value=t.equipo||'';$('dvPa').value=t.parte||'';$('dvDe').value='';
  $('dvRe').innerHTML='<option value="">Seleccionar</option>'+RESPONSABLES.map(function(x){return '<option>'+esc(x)+'</option>'}).join('');
- $('dvFe').value=dstr(jd());$('dvTu').value=turnoNow();$('dvEs').value='';
+ $('dvFe').value=dstr(jd());$('dvTu').value=turnoNow();$('dvEs').value='';if(DVJ)dvAuto();
  [].forEach.call($('dvp').querySelectorAll('.bad'),function(e){e.classList.remove('bad')});
  $('dvp').hidden=false}
 $('dvX').onclick=function(){$('dvp').hidden=true};
+$('dvIL').addEventListener('change',function(e){var j=e.target.dataset.dj2;if(j!=null){DVS[j]=e.target.checked;dvAuto()}});
+$('dvT').addEventListener('input',function(){DVD.t=1});$('dvDe').addEventListener('input',function(){DVD.d=1});
 $('dvOk').onclick=function(){var t=tasks.filter(function(x){return x.id===DVID})[0];if(!t||!me||me.rol!=='supervisor')return;
  if(!need([['dvT','Título'],['dvDe','Detalle de tarea'],['dvRe','Responsable'],['dvFe','Fecha'],['dvTu','Turno'],['dvEs','Tiempo estimado',1]]))return;
+ var selJ=DVJ?DVJ.filter(function(j){return DVS[j]&&t.pedir[j]&&t.pedir[j].lleg&&!t.pedir[j].inst}):[];
+ if(DVJ&&!selJ.length){warn('Por favor, elija al menos un repuesto para instalar.');return}
  var bt=$('dvOk');bt.disabled=true;var rv=me.nombre,ahora=new Date().toISOString(),tp=$('dvTp').value,res=$('dvRe').value,tit=$('dvT').value.trim();
  nextOT(function(n){
-  saveTask({id:Date.now(),ot:n,titulo:tit,tipo:tp,equipo:$('dvEq').value.trim(),parte:$('dvPa').value.trim(),sub:'',area:$('dvAr').value.trim(),resp:res,contr:false,contrNom:'',detalle:$('dvDe').value.trim(),prio:$('dvPr').value,estado:'pendiente',fecha:$('dvFe').value,est:(+$('dvEs').value)/60,real:'',turno:$('dvTu').value,horaFalla:'',horaCarga:hhmm(),parts:[],pedir:[],fb:'',fotos:[],cre:rv,derivDe:t.ot,derivTit:t.titulo});
+  saveTask({id:Date.now(),ot:n,titulo:tit,tipo:tp,equipo:$('dvEq').value.trim(),parte:$('dvPa').value.trim(),sub:'',area:$('dvAr').value.trim(),resp:res,contr:false,contrNom:'',detalle:$('dvDe').value.trim(),prio:$('dvPr').value,estado:'pendiente',fecha:$('dvFe').value,est:(+$('dvEs').value)/60,real:'',turno:$('dvTu').value,horaFalla:'',horaCarga:hhmm(),parts:DVJ?selJ.map(function(j){var q=t.pedir[j];return{n:q.n,d:q.d||'',q:q.q}}):[],pedir:[],fb:'',fotos:[],cre:rv,derivDe:t.ot,derivTit:t.titulo});
+  if(DVJ){selJ.forEach(function(j){t.pedir[j].inst=n});saveTask(t);if(res!==rv)notify(res,fmt(n)+' fue planificada por '+rv+' para instalar repuestos de '+fmt(t.ot)+': '+tit);bt.disabled=false;$('dvp').hidden=true;render();if(!$('vp').hidden)renderV();if(!$('lgp').hidden)drawLG();msg('Se planificó '+fmt(n));return}
   var h=(t.hist||[]).slice();
   if(DVAP){h.push({rev:'aprobada',por:rv,fec:ahora,com:'',nueva:''});t.rev='aprobada';t.revPor=rv;t.revFec=ahora;t.revCom=''}
   h.push({rev:'derivada',por:rv,fec:ahora,com:'',nueva:n});t.hist=h;saveTask(t);
@@ -1594,6 +1626,13 @@ $('dvOk').onclick=function(){var t=tasks.filter(function(x){return x.id===DVID})
   bt.disabled=false;$('dvp').hidden=true;render();renderV();msg((DVAP?'Tarea aprobada; ':'')+'se planificó '+fmt(n));
  });
 };
+var LG=[];
+function openLG(items){var g={},ks=[];items.forEach(function(x){var p=x.t.pedir[x.j];if(!p||p.inst)return;if(!g[x.t.id]){g[x.t.id]={id:x.t.id,js:[]};ks.push(x.t.id)}g[x.t.id].js.push(x.j)});LG=ks.map(function(k){return g[k]});if(!LG.length)return false;drawLG();$('lgp').hidden=false;return true}
+function drawLG(){$('lgG').innerHTML=LG.map(function(G){var t=tasks.filter(function(x){return x.id===G.id})[0];if(!t)return '';var left=G.js.filter(function(j){return t.pedir[j]&&!t.pedir[j].inst}),h='<div class="box"><b>'+(t.ot?fmt(t.ot)+' · ':'')+esc(t.titulo)+'</b>'+(t.equipo?'<div class="mt">'+esc(t.equipo)+'</div>':'');
+ h+=G.js.map(function(j){var p=t.pedir[j];return '<div class="pit"><b>'+esc(p.n)+'</b>'+(p.d?' · '+esc(p.d):'')+' · ×'+esc(p.q)+(p.inst?'<div class="mt">Se instala en '+fmt(p.inst)+'</div>':'')+'</div>'}).join('');
+ h+=left.length?'<button class="btn s" data-lg="'+t.id+'" style="margin-top:8px">Crear OT para instalar ('+left.length+')</button>':'<div class="ok" style="margin-top:8px">Ya se creó la OT de instalación.</div>';return h+'</div>'}).join('')}
+$('lgG').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.lg)return;var t=tasks.filter(function(x){return String(x.id)===b.dataset.lg})[0];if(!t||!me||me.rol!=='supervisor')return;var G=LG.filter(function(g){return String(g.id)===b.dataset.lg})[0];if(!G)return;var js=G.js.filter(function(j){return t.pedir[j]&&!t.pedir[j].inst});if(js.length)openDv(t,false,js)});
+$('lgX').onclick=function(){$('lgp').hidden=true};
 var RBID=null;
 $('rbX').onclick=function(){$('rbp').hidden=true};
 $('rbOk').onclick=function(){var t=tasks.filter(function(x){return x.id===RBID})[0],m=$('rbM').value.trim();if(!t||!me||me.rol!=='supervisor')return;if(!m){$('rbM').classList.add('bad');$('rbM').focus();warn('Por favor, escriba el motivo de la reapertura.');return}if(t.rev==='aprobada'){warn('Una tarea aprobada no se puede reabrir.');return}
@@ -1601,7 +1640,7 @@ $('rbOk').onclick=function(){var t=tasks.filter(function(x){return x.id===RBID})
 var PRID=null,PRPRE=[],DCID=null,DCS={};
 function openPR(t){PRID=t.id;PRPRE=[];L.prow=[];(t.pedir||[]).forEach(function(p,j){if((p.n||p.d)&&!p.ok&&!p.dec&&!p.sol){PRPRE.push(j);L.prow.push({n:p.n,d:p.d,q:p.q})}});
  if(!L.prow.length)L.prow.push({n:'',d:'',q:1});
- $('prT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo;$('prM').textContent=PRPRE.length?'Los repuestos que ya estaban cargados en la orden como "a pedir" aparecen acá. Si quita una fila, también se saca de la orden.':'El coordinador va a revisar cada repuesto y decidir si hay en stock, si se resuelve con otra cosa o si se compra.';
+ var cor=me&&me.rol==='supervisor';$('prOk').textContent=cor?'Registrar pedido (para comprar)':'Enviar solicitud al coordinador';$('prT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo;$('prM').textContent=cor?'Como coordinador, el pedido queda directo como "Comprar" y pasa a Realizar pedido. Se le avisa al técnico responsable de la orden.':PRPRE.length?'Los repuestos que ya estaban cargados en la orden como "a pedir" aparecen acá. Si quita una fila, también se saca de la orden.':'El coordinador va a revisar cada repuesto y decidir si hay en stock, si se resuelve con otra cosa o si se compra.';
  rows('prow');$('prp').hidden=false}
 $('prX').onclick=function(){$('prp').hidden=true};
 $('prOk').onclick=function(){var t=tasks.filter(function(x){return x.id===PRID})[0];if(!t||!me||!me.rol){$('prp').hidden=true;return}
@@ -1610,11 +1649,12 @@ $('prOk').onclick=function(){var t=tasks.filter(function(x){return x.id===PRID})
  var rs=okp(L.prow);if(!rs.length){warn('Por favor, agregue al menos un repuesto.');return}
  var now=dstr(jd())+'T'+hhmm();
  var keep=(t.pedir||[]).filter(function(p,j){return PRPRE.indexOf(j)<0});
- t.pedir=keep.concat(rs.map(function(r){return{n:String(r.n).trim(),d:String(r.d).trim(),q:r.q,ok:false,sol:me.nombre,solFec:now}}));
- saveTask(t);$('prp').hidden=true;render();
+ var cor=me.rol==='supervisor';
+ t.pedir=keep.concat(rs.map(function(r){var o={n:String(r.n).trim(),d:String(r.d).trim(),q:r.q,ok:false,sol:me.nombre,solFec:now};if(cor){o.dec='comprar';o.nota='';o.decPor=me.nombre;o.decFec=now}return o}));
+ saveTask(t);$('prp').hidden=true;render();if(!$('vp').hidden)renderV();
  var tx=rs.map(function(r){return r.n+' ×'+r.q}).join(', ');
- CREADORES.forEach(function(sp){if(sp!==me.nombre)notify(sp,(t.ot?fmt(t.ot)+' · ':'')+me.nombre+' solicitó repuestos: '+tx)});
- msg('Solicitud enviada al coordinador')};
+ if(cor){if(t.resp&&t.resp!==me.nombre&&t.resp!=='Contratista')notify(t.resp,(t.ot?fmt(t.ot)+' · ':'')+me.nombre+' pidió repuestos para tu orden: '+tx);msg('Pedido registrado para comprar')}
+ else{CREADORES.forEach(function(sp){if(sp!==me.nombre)notify(sp,(t.ot?fmt(t.ot)+' · ':'')+me.nombre+' solicitó repuestos: '+tx)});msg('Solicitud enviada al coordinador')}};
 function openDC(t){DCID=t.id;DCS={};$('dcT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo;drawDC(t);$('dcp').hidden=false}
 function drawDC(t){var h='';(t.pedir||[]).forEach(function(p,j){if(!(p.n&&!p.ok&&!p.dec))return;var d=DCS[j]||{dec:'',nota:''},C={stock:'#78AD8B',otra:'#7FA3D1',comprar:'#E08A2E',rechazo:'#D17F78'},O=[['stock','Hay en stock'],['otra','Otra solución'],['comprar','Comprar'],['rechazo','Rechazar']];
   h+='<div class="box"><b>'+esc(p.n)+'</b>'+(p.d?' · '+esc(p.d):'')+' · ×'+esc(p.q)+(p.sol?'<div class="mt">Pidió '+esc(p.sol)+'</div>':'')+'<div class="dcg">'+O.map(function(o){var on=d.dec===o[0];return '<button type="button" data-dj="'+j+'" data-dd="'+o[0]+'" class="'+(on?'on':'')+'"'+(on?' style="background:'+C[o[0]]+'26;border-color:'+C[o[0]]+';color:'+C[o[0]]+'"':'')+'>'+o[1]+'</button>'}).join('')+'</div>';
@@ -1777,9 +1817,23 @@ function openPV(p){
  var h='<h2>Pedido '+fmtP(p.num)+'</h2><div class="mt">'+esc(dmy(p.fecha))+' · Solicita: '+esc(p.sol)+' · Urgencia: '+esc(p.urg)+'</div>';
  h+='<div class="box"><div class="cp">'+chp('#E08A2E',p.tipo)+'</div><b>'+esc(p.para)+'</b><div class="det" style="margin-top:6px">'+esc(p.detalle)+'</div>';
  if((p.fotos||[]).length)h+='<div class="fl">'+p.fotos.map(function(x){return '<img class="im" alt="Foto" src="'+fsrc(x)+'">'}).join('')+'</div>';
- h+='</div><div class="box"><table><tr><th>Ítem</th><th>OT</th><th>Cant.</th></tr>'+(p.items||[]).map(function(i){return '<tr><td>'+esc(i.n)+(i.d?'<br><small>'+esc(i.d)+'</small>':'')+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'—')+'</td><td>'+esc(i.q)+'</td></tr>'}).join('')+'</table></div>';
+ var cor=me&&me.rol==='supervisor',pen=(p.items||[]).filter(function(i){return !i.lleg}).length;
+ h+='</div><div class="box"><table><tr><th>Ítem</th><th>OT</th><th>Cant.</th><th>Llegó</th></tr>'+(p.items||[]).map(function(i,k){return '<tr><td>'+esc(i.n)+(i.d?'<br><small>'+esc(i.d)+'</small>':'')+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'—')+'</td><td>'+esc(i.q)+'</td><td>'+(i.lleg?chp('#78AD8B','Sí'+(i.llegFec?' · '+dmy(String(i.llegFec).slice(0,10)):'')):(cor?'<input type="checkbox" class="pvc" data-pl="'+k+'" aria-label="Marcar que llegó">':'—'))+'</td></tr>'}).join('')+'</table></div>';
+ if(cor&&pen)h+='<div class="ac"><button class="btn s" data-pm="sel" style="background:#78AD8B">Marcar lo tildado como llegado</button><button class="btn g s" data-pm="all">Llegó todo lo que falta</button></div>';
  $('pvB').innerHTML=h;$('pv').hidden=false;
 }
+$('pvB').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.pm||!pvCur||!me||me.rol!=='supervisor')return;
+ var p=pvCur,ks=[];(p.items||[]).forEach(function(i,k){if(i.lleg)return;if(b.dataset.pm==='all'||document.querySelector('#pvB [data-pl="'+k+'"]:checked'))ks.push(k)});
+ if(!ks.length){warn('Por favor, tilde los repuestos que llegaron.');return}
+ var now=dstr(jd())+'T'+hhmm(),found=[],ts={};
+ ks.forEach(function(k){var i=p.items[k];i.lleg=true;i.llegFec=now;i.llegPor=me.nombre;
+  if(!i.ot)return;var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(!t)return;
+  var j=(t.pedir||[]).findIndex(function(x){return x.ped===p.num&&!x.lleg&&String(x.n)===String(i.n)&&String(x.d||'')===String(i.d||'')&&String(x.q)===String(i.q)});
+  if(j<0)return;var q=t.pedir[j];q.lleg=true;q.llegPor=me.nombre;q.llegFec=now;ts[t.id]=t;found.push({t:t,j:j})});
+ setDoc(doc(fdb,'pedidos',String(p.id)),p).catch(dbErr);
+ Object.keys(ts).forEach(function(k){saveTask(ts[k])});
+ openPV(p);render();msg(ks.length===1?'Repuesto marcado como llegado':ks.length+' repuestos marcados como llegados');
+ if(found.length)openLG(found)});
 $('pvC').onclick=function(){if(pvCur)copyTxt(pvTxt(pvCur)).then(function(){msg('Texto copiado. Ya puede pegarlo en el correo.')},function(){warn('No se pudo copiar. Intente desde la página publicada.')})};
 $('pvP').onclick=function(){
  var p=pvCur;if(!p)return;
@@ -1877,7 +1931,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 function show(id){
  VW.forEach(function(x){$(x).hidden=x!==id});
  [].forEach.call(document.querySelectorAll('#nav button'),function(b){b.classList.toggle('on',b.dataset.v===id)});
- ['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp'].forEach(function(x){$(x).hidden=true});edit=null;
+ ['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp'].forEach(function(x){$(x).hidden=true});edit=null;
  window.scrollTo(0,0);if(id==='dp')renderDash();
 }
 $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
@@ -1885,7 +1939,7 @@ $('nav').addEventListener('click',function(e){var b=e.target.closest('button');i
   if(op.length){var t=op[op.length-1];t.hidden=true;if(t.id==='pan')edit=null}else if(!$('v1').hidden===false){show('v1')}return}
  show(b.dataset.v)});
 document.addEventListener('click',function(e){var b=e.target.closest('.bk');if(b){$(b.dataset.bk).hidden=true;if(b.dataset.bk==='pan')edit=null}});
-['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp'].forEach(function(id){new MutationObserver(function(){if(!$(id).hidden){$(id).scrollTop=0}}).observe($(id),{attributes:true,attributeFilter:['hidden']})});
+['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp'].forEach(function(id){new MutationObserver(function(){if(!$(id).hidden){$(id).scrollTop=0}}).observe($(id),{attributes:true,attributeFilter:['hidden']})});
 $('fQ').addEventListener('input',render);
 document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.classList&&d.classList.contains('mo'))openD[d.dataset.id]=d.open},true);
 var VER=(document.querySelector('meta[name="app-version"]')||{}).content||'';
