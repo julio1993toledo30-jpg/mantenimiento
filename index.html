@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.16 · 18/11/2026 19:00">
+<meta name="app-version" content="V2.17 · 18/11/2026 19:11">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -697,6 +697,7 @@ body{background:#fff}
 <label>Turno <b class="rq">*</b><select id="fTu"><option value="">Seleccionar</option><option>Mañana</option><option>Tarde</option><option>Noche</option></select></label>
 <label id="lEs">Tiempo estimado (min) <b class="rq">*</b><input type="number" id="fEs" min="0" step="5" inputmode="numeric"></label>
 </div>
+<div class="sm" id="fSm"></div>
 <label id="lHf" hidden>Hora aproximada de la falla <b class="rq">*</b><input type="time" id="fHf"></label>
 </div>
 <div class="blk r" id="tRt" hidden>
@@ -708,7 +709,6 @@ body{background:#fff}
 <label>Tiempo real (min) <b class="rq" id="rqRl">*</b> <small class="op" id="opRl">al cerrar</small><input type="number" id="fRl" min="0" step="5" inputmode="numeric"></label>
 <label>Horas de máquina <small class="op">opcional</small><input type="number" id="fHm" min="0" step="1" inputmode="numeric"></label>
 </div>
-<div class="sm" id="fSm"></div>
 <div class="sec">Repuestos utilizados <small>(opcional)</small></div>
 <div id="pL"></div>
 <button class="btn g s" data-add="parts">Agregar repuesto</button>
@@ -890,24 +890,16 @@ function renderLoad(){
 }
 document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-ld]');if(!b)return;var f=LDD||$('fD').value||dstr(jd()),n=b.getAttribute('data-ld');LDD=n==='0'?'':addD(f,+n);renderLoad()});
 document.addEventListener('change',function(e){var i=e.target;if(i&&i.hasAttribute&&i.hasAttribute('data-ldi')){LDD=i.value||'';renderLoad()}});
-function capLine(r,f,m,el){
+function capLine(r,f,m,el,skip){
  if(r==='Contratista'){el.textContent='Orden para contratista: no cuenta en la carga de ningún técnico.';el.style.borderLeftColor='var(--ln)';return}
  if(!r||!f){el.textContent='Elija responsable y fecha para ver el tiempo disponible del técnico.';el.style.borderLeftColor='var(--ln)';return}
- var MT=metaFor(r,f),ex=loadMin(r,f,null),libre=MT-ex,left=libre-m;
+ var MT=metaFor(r,f),ex=loadMin(r,f,skip||null),libre=MT-ex,left=libre-m;
  if(MT===0){el.innerHTML='<b style="color:var(--rd)">'+esc(r)+' figura ausente ese día (Novedades del personal).</b>';el.style.borderLeftColor='var(--rd)';return}
  el.innerHTML=esc(r)+' · '+esc(dmy(f))+': tiempo disponible <b>'+Math.max(0,libre)+' min</b> (ya asignado '+ex+' de '+MT+')'+(libre<0?' · <b style="color:var(--rd)">ya excedido en '+(-libre)+' min</b>':'')+(m>0?'<br>Con esta tarea ('+m+' min): '+(left>=0?'quedan <b>'+left+' min</b>':'<b style="color:var(--rd)">se excede en '+(-left)+' min</b>'):'');
  el.style.borderLeftColor=(m>0?left<0:libre<0)?'var(--rd)':'var(--ok)'}
 function sumDv(){var el=$('dvSm');if(el)capLine($('dvRe').value,$('dvFe').value,+$('dvEs').value||0,el)}
 function sumV(id){var el=document.querySelector('[data-sm="'+id+'"]');if(!el)return;var x=vx[id]||{},t=tasks.filter(function(y){return y.id===id})[0]||{};capLine(x.r||'',x.f||dstr(jd()),x.es!=null&&x.es!==''?+x.es:(t.est===''||t.est==null?0:mn(t.est)),el)}
-function sumF(){
- var r=$('fRe').value,f=$('fFe').value,m=+$('fEs').value||0,el=$('fSm');
- if(r==='Contratista'){el.textContent='Orden para contratista: no cuenta en la carga de ningún técnico.';el.style.borderLeftColor='var(--ln)';return}
- if(!r||!f){el.textContent='Seleccione responsable y fecha para ver la carga del día.';el.style.borderLeftColor='var(--ln)';return}
- var MT=metaFor(r,f),ex=loadMin(r,f,edit),tot=ex+m,left=MT-tot;
- if(MT===0){el.innerHTML='<b style="color:var(--rd)">'+esc(r)+' figura ausente ese día (Novedades del personal).</b>';el.style.borderLeftColor='var(--rd)';return}
- el.innerHTML=esc(r)+' ese día: ya asignado <b>'+ex+' min</b> + esta tarea <b>'+m+' min</b> = <b>'+tot+' / '+MT+' min</b> · '+(left>=0?'quedan <b>'+left+' min</b>':'<b style="color:var(--rd)">se excede en '+(-left)+' min</b>');
- el.style.borderLeftColor=left<0?'var(--rd)':'var(--ok)';
-}
+function sumF(){var el=$('fSm');if(el)capLine($('fRe').value,$('fFe').value,+$('fEs').value||0,el,edit)}
 var TC={'Preventivo':'#4FB477','Predictivo':'#4F94E0','Correctivo programado':'#E08A2E','Correctivo no programado':'#E0524A'},SC={pendiente:'#D6B85F',hecha:'#78AD8B',noreal:'#9AA0A8',incompleto:'#D39563'},PC={baja:'#8FB59A',media:'#C9B574',alta:'#D39563',critica:'#D17F78'},SI={pendiente:'M12 7v5l3 2',hecha:'M5 12l5 5 9-10',noreal:'M6 6l12 12M18 6 6 18',incompleto:'M5 12h14'},openD={};
 function chS(c,x,p){return '<span class="tg" style="color:#fff;background:'+c+'55;border-color:'+c+';border-width:2px;font-size:14px;font-weight:800;padding:4px 14px">'+(p?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
 function tmChip(t){var e=mn(t.est),has=t.real!==''&&t.real!=null;if(!has)return chp('#A0A8B1','Plan '+e+' min');var r=mn(t.real),d=r-e;
