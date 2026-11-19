@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.18 · 18/11/2026 21:33">
+<meta name="app-version" content="V2.20 · 19/11/2026 18:59">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -235,6 +235,7 @@ body{background:#fff}
 <div class="mgv" id="mg2" hidden><button class="bk2" data-mg="home">‹ Más</button><h2 style="margin:0 0 12px;font-size:20px">Personal</h2>
 <button class="act" id="bTu"><div class="ic" style="background:#7FA3D126"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7FA3D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M17 6v5l3 2"/></svg></div><div><b>Turnos de la semana</b><span class="d">Qué turno hace cada técnico</span></div><span id="tPend" style="margin-left:auto"></span></button>
 <button class="act" id="bFe"><div class="ic" style="background:#D17F7826"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D17F78" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M9 14l6 4M15 14l-6 4"/></svg></div><div><b>Días y turnos de trabajo</b><span class="d">Semana normal y excepciones</span></div></button>
+<button class="act" id="bEq"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V9l6 3V9l6 3V5h6v16z"/></svg></div><div><b>Áreas y equipos</b><span class="d">Lista para elegir al cargar tareas</span></div></button>
 <button class="act" id="bJ"><div class="ic" style="background:#78AD8B26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#78AD8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>Novedades del personal</b><span class="d">Turnos de 12 h, ausencias, permisos y horas extra</span></div><span id="jPend" style="margin-left:auto"></span></button>
 <button class="act" id="bSol"><div class="ic" style="background:#D0A86826"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D0A868" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg></div><div><b>Solicitar vacaciones o permiso</b><span class="d">Para su aprobación por el coordinador</span></div></button>
 </div>
@@ -257,6 +258,13 @@ body{background:#fff}
 </div>
 </section>
 
+<div class="pan" id="eqp" hidden>
+<button class="bk" data-bk="eqp">‹ Volver</button>
+<h2>Áreas y equipos</h2>
+<div class="mt" style="margin-bottom:12px">Esta lista se ofrece al cargar una tarea o una falla. Si falta algo, igual se puede escribir a mano. Los cambios se guardan solos y no modifican las tareas ya cargadas.</div>
+<div class="box" style="margin-bottom:14px"><b>Nueva área</b><div class="g2" style="margin-top:6px;align-items:end"><input id="eqNa" placeholder="Nombre del área" autocomplete="off"><button class="btn s" id="eqAa">Agregar área</button></div></div>
+<div id="eqL"></div>
+</div>
 <div class="pan" id="fp" hidden>
 <button class="bk" data-bk="fp">‹ Volver</button>
 <h2>Días y turnos de trabajo</h2>
@@ -321,7 +329,7 @@ body{background:#fff}
 <h2>Planificar tarea nueva</h2>
 <div class="mt" id="dvO" style="margin-bottom:10px"></div>
 <div class="lb">Feedback de la tarea original (para guiarse)</div><div class="det" id="dvF" style="margin-bottom:10px"></div>
-<div id="dvI" hidden><div class="lb">Repuestos que llegaron: elija cuáles se instalan en esta OT</div><div id="dvIL"></div></div>
+<div id="dvI" hidden><div class="lb">Repuestos recibidos: elija cuáles se instalan en esta OT</div><div id="dvIL"></div></div>
 <div class="lgq"><b class="rq">*</b> Obligatorio.</div>
 <label>Título <b class="rq">*</b><input id="dvT" placeholder="Qué hay que hacer"></label>
 <div class="g2"><label>Tipo de mantenimiento <b class="rq">*</b><select id="dvTp"></select></label><label>Prioridad <b class="rq">*</b><select id="dvPr"><option>baja</option><option selected>media</option><option>alta</option><option>critica</option></select></label></div>
@@ -366,7 +374,7 @@ body{background:#fff}
 <label>Persona que informa <b class="rq">*</b><select id="qW"></select></label>
 <label>Descripción de lo ocurrido <b class="rq">*</b><input id="qTi" placeholder="Ej.: Pierde aceite la bomba 2"></label>
 <div class="g2">
-<label>Equipo <b class="rq">*</b><input id="qEq" placeholder="Ej.: Bomba 2"></label>
+<label>Equipo <b class="rq">*</b><input id="qEq" list="dlEqAll" placeholder="Elegir de la lista o escribir" autocomplete="off"></label>
 <label>Prioridad <b class="rq">*</b><select id="qPr"><option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option><option value="critica">Crítica</option></select></label>
 </div>
 <label>Turno <b class="rq">*</b><select id="qTu"><option value="">Seleccionar</option><option>Mañana</option><option>Tarde</option><option>Noche</option></select></label>
@@ -604,9 +612,34 @@ body{background:#fff}
 <div class="ac"><button class="btn" id="pvC">Copiar para correo</button><button class="btn g" id="pvP">Imprimir / PDF</button></div>
 </div>
 
+<div class="pan" id="erp" hidden>
+<button class="bk" data-bk="erp">‹ Volver</button>
+<h2>Editar repuesto</h2>
+<div class="mt" id="erT" style="margin-bottom:10px"></div>
+<label>Repuesto <b class="rq">*</b><input id="erN" autocomplete="off"></label>
+<label>Descripción <small>(marca, medida)</small><input id="erD" autocomplete="off"></label>
+<label>Cantidad <b class="rq">*</b><input id="erQ" inputmode="numeric" autocomplete="off"></label>
+<div class="mt" id="erM" style="margin-top:8px"></div>
+<div class="ac"><button class="btn" id="erOk">Guardar cambios</button><button class="btn g" id="erX">Cancelar</button></div>
+</div>
+<div class="pan" id="epp" hidden>
+<button class="bk" data-bk="epp">‹ Volver</button>
+<h2 id="epT">Editar pedido</h2>
+<div class="lgq"><b class="rq">*</b> Obligatorio.</div>
+<div class="g2"><label>Solicita <b class="rq">*</b><select id="eSo"></select></label><label>Urgencia <b class="rq">*</b><select id="eUr"><option>Normal</option><option>Urgente</option></select></label></div>
+<label>Tipo de pedido <b class="rq">*</b><select id="eTp"></select></label>
+<label id="lEtO" hidden>Describí qué es <b class="rq">*</b><input id="eTpO"></label>
+<label>Para qué es el pedido <b class="rq">*</b><input id="ePa"></label>
+<label>Detalle <b class="rq">*</b><textarea id="eDe" rows="3"></textarea></label>
+<div class="sec">Ítems</div>
+<div id="eIt"></div>
+<button class="btn g s" id="eAd">Agregar ítem</button>
+<div class="mt" style="margin-top:8px">Los ítems ya recibidos no se pueden cambiar. Si saca un ítem que viene de una orden, vuelve a «Comprar» en esa orden.</div>
+<div class="ac"><button class="btn" id="eOk">Guardar cambios</button><button class="btn g" id="eX">Cancelar</button></div>
+</div>
 <div class="pan" id="lgp" hidden>
 <button class="bk" data-bk="lgp">‹ Volver</button>
-<h2>Llegaron repuestos</h2>
+<h2>Repuestos recibidos</h2>
 <div class="mt" style="margin-bottom:12px">Si hay que instalarlos, puede crear una OT por cada orden de origen. No se crea nada hasta que usted confirme cada formulario.</div>
 <div id="lgG"></div>
 <div class="ac"><button class="btn g" id="lgX">Listo, más tarde</button></div>
@@ -679,11 +712,11 @@ body{background:#fff}
 <label>Responsable <b class="rq">*</b><select id="fRe"></select></label>
 </div>
 <div class="g3">
-<label>Área <b class="rq">*</b><input id="fAr" list="dlAr" placeholder="Ej.: Producción" autocomplete="off"></label>
-<label>Sector / Equipo <b class="rq">*</b><input id="fEq" placeholder="Ej.: Compresor 2"></label>
+<label>Área <b class="rq">*</b><input id="fAr" list="dlAr" placeholder="Elegir de la lista o escribir" autocomplete="off"></label>
+<label>Sector / Equipo <b class="rq">*</b><input id="fEq" list="dlEqF" placeholder="Elegir de la lista o escribir" autocomplete="off"></label>
 <label>Parte <b class="rq">*</b><input id="fPa" placeholder="Ej.: Motor"></label>
 </div>
-<datalist id="dlAr"></datalist>
+<datalist id="dlAr"></datalist><datalist id="dlEqF"></datalist><datalist id="dlEqAll"></datalist>
 <label>Subparte <small class="op">opcional</small><input id="fSp" placeholder="Ej.: Correa"></label>
 <label>Detalle de tarea <b class="rq">*</b><textarea id="fDe" rows="3" placeholder="Qué hay que hacer, herramientas, advertencias"></textarea></label>
 <div class="box" id="acB" style="margin:4px 0 8px"><b>Acompañantes</b> <small class="op">opcional · si la tarea la hacen dos o más personas</small>
@@ -818,7 +851,7 @@ function tbl(a,id,ck){
  return '<table><tr><th>Repuesto</th><th>Descripción</th><th class="n">Cant.</th>'+(ck?'<th class="n">Pedido</th>':'')+'</tr>'+r+'</table>';
 }
 function sec(l,h){return h?'<div class="lb">'+l+'</div>'+h:''}
-function pedSt(p){if(p.lleg)return chp('#78AD8B','Llegó'+(p.llegFec?' · '+dmy(String(p.llegFec).slice(0,10)):''));
+function pedSt(p){if(p.lleg)return chp('#78AD8B','Recibido'+(p.llegFec?' · '+dmy(String(p.llegFec).slice(0,10)):''));
  if(p.ok)return chp('#78AD8B','Pedido'+(p.ped?' '+fmtP(p.ped):''));
  if(p.dec==='stock')return chp('#78AD8B','Hay en stock');if(p.dec==='otra')return chp('#7FA3D1','Otra solución');if(p.dec==='rechazo')return chp('#D17F78','Rechazado');if(p.dec==='comprar')return chp('#E08A2E','Comprar · esperando');
  return chp('#D6B85F',p.sol?'Solicitado · sin revisar':'Sin revisar')}
@@ -828,12 +861,12 @@ function pedH(t,ro){
   h+='<div class="pit"><b>'+esc(p.n)+'</b>'+(p.d?' · '+esc(p.d):'')+' · ×'+esc(p.q)+(p.sol?'<div class="mt">Pidió '+esc(p.sol)+(p.solFec?' · '+esc(dmy(String(p.solFec).slice(0,10))):'')+'</div>':'')+'<div>'+pedSt(p)+'</div>';
   if(p.inst)h+='<div class="mt">Se instala en '+fmt(p.inst)+'</div>';
   if(p.nota)h+='<div class="pnt">'+(p.decPor?esc(p.decPor)+': ':'')+esc(p.nota)+'</div>';
-  if(!ro&&me&&me.rol==='supervisor'&&esp(p))h+='<button class="btn s" data-a="lleg" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px;background:#78AD8B">Marcar que llegó</button>';
-  if(!ro&&me&&me.rol==='supervisor'&&p.lleg)h+='<button class="btn g s" data-a="nolleg" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px">Quitar «Llegó» (fue un error)</button>';
+  if(!ro&&me&&me.rol==='supervisor'&&esp(p)&&p.ok)h+='<div class="mt">Se marca como recibido en el menú Pedidos.</div>';
+  if(!ro&&me&&me.rol==='supervisor'&&!p.lleg&&!p.inst&&(!p.dec||p.dec==='comprar'||p.ok))h+='<button class="btn g s" data-a="erep" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px">Editar repuesto</button>';
   if(!ro&&me&&p.sol&&p.sol===me.nombre&&!p.dec&&!p.ok)h+='<button class="btn g s" data-a="pcan" data-i="'+t.id+'" data-j="'+j+'" style="margin-top:6px">Cancelar este pedido</button>';
   h+='</div>'});
  if(!k)return '';
- if(!ro&&me&&me.rol==='supervisor'&&pend2(t).length)h+='<button class="btn s" data-a="oti" data-i="'+t.id+'" style="margin-top:8px">Crear OT con lo que llegó ('+pend2(t).length+')</button>';
+ if(!ro&&me&&me.rol==='supervisor'&&pend2(t).length)h+='<button class="btn s" data-a="oti" data-i="'+t.id+'" style="margin-top:8px">Crear OT con lo recibido ('+pend2(t).length+')</button>';
  if(!ro&&me&&me.rol==='supervisor'&&nDec(t))h+='<button class="btn s" data-a="dec" data-i="'+t.id+'" style="margin-top:8px">Decidir repuestos ('+nDec(t)+')</button>';
  return h}
 function inRange(f,p){
@@ -1286,7 +1319,18 @@ function open(t){
 }
 function tabSet(n){$('tPl').hidden=n!==1;$('tRt').hidden=n!==2;$('tbP').classList.toggle('on',n===1);$('tbR').classList.toggle('on',n===2)}
 function tabFor(){var b=document.querySelector('#pan .bad');if(b)tabSet(b.closest('#tRt')?2:1)}
-function areaDL(){var u={};tasks.forEach(function(t){if(t.area)u[t.area]=1});$('dlAr').innerHTML=Object.keys(u).sort().map(function(a){return '<option value="'+esc(a)+'">'}).join('')}
+var EQ0=[{"a":"INGRESO DE FRUTA Y MOLIENDA","e":["VOLCADORA 01","LAVADORA 01","ELEVADORA 01","DESCARTADOR 01","CEPILLADORA 01","ELEVADOR A CANGILONES 01","CINTA ALIMENTADORA 01","CINTA RETORNO 01","MOLINO CHICO 01","MOLINO GRANDE 01","FINISHER 01","MOLINO BOMBA 01","TANQUE PULMON MOLIENDA 01","TANQUE PULMON MOLIENDA 02","TANQUE PULMON MOLIENDA 03","CIP 01"]},{"a":"EXTRACCION","e":["JBT 01","JBT 02","FINISHER 01","MOLINO BOMBA 01","SINFÍN 01","SINFÍN 02","SINFÍN 03","TANQUE PULMON 01","TANQUE PULMON 02","TANQUE ELEVADOR DE PULPA 01","TANQUE LAVADO DE PULPA 01"]},{"a":"FORMULACION","e":["DISOLUTOR 01","DISOLUTOR 02","TANQUE FORMULA 9000 - 01","TANQUE FORMULA 9000 - 02","TANQUE FORMULA 9000 - 03","TANQUE FORMULA 3000 - 01","TANQUE FORMULA 3000 - 02","PASTEURIZADOR 01","PASTEURIZADOR 02"]},{"a":"ENVASADO DE BIDONES","e":["TANQUE DE FORMULA TERMICO 01","BOMBA ALIMENTACION DE BIDONERA","DOSIFICADOR DE VELCORIN 01","BIDONERA 01","TURBINA DE VACIO 01","IMPRESORA DOMINO AX150 01","TRANSPORTE DE BIDONES 01","ROSCADOR DE TAPAS 01","ETIQUETADORA 01","ENCINTADORA DE CAJAS 01"]},{"a":"ENVASADO TP 01","e":["ENVASADORA TP-01","CAP 30-01","CBP 70-01","TRANSPORTE DE ENVASES 01","IMPRESORA DOMINO 02"]},{"a":"ENVASADO TP 02","e":["ENVASADORA TP-02","HELIX - 01","APLICADOR DE SORBETE - 01","CONTROLADOR DE LINEA - 01","CBP32 - 01","TRANSPORTE DE ENVASES - 02","IMPRESORA DOMINO 03"]},{"a":"SERVICIOS AUXILIARES","e":["CALDERA 01","COMPRESOR 01","COMPRESOR 02","COMPRESOR 03","COMPRESOR 04","ABLANDADOR DE AGUA 01","TORRE DE ENFRIAMIENTO 01","TORRE DE ENFRIAMIENTO 02","TORRE DE ENFRIAMIENTO 03","EQUIPO DE FRIO 01","EQUIPO DE FRIO 02","TANQUE DE AGUA GLICOLADA 01","TANQUE DE AGUA GLICOLADA 02","TANQUE AGUA DE RED 01","SECADOR DE AIRE 01","SECADOR DE AIRE 02","SECADOR DE AIRE 03","SECADOR DE AIRE 04","EXTRACCION DE AGUA DURA 01","TANQUE PULMON AIRE COMPRIMIDO 01","TANQUE PULMON AIRE COMPRIMIDO 02","PLANTA DE EFLUENTES 01","CAMARA 01","CAMARA 02","CAMARA 03"]}],EQ=null;
+function eqL(){return EQ||EQ0}
+function eqKey(x){return String(x||'').trim().toUpperCase()}
+function areaDL(){var u={};eqL().forEach(function(g){u[g.a]=1});tasks.forEach(function(t){if(t.area&&!Object.keys(u).some(function(k){return eqKey(k)===eqKey(t.area)}))u[t.area]=1});$('dlAr').innerHTML=Object.keys(u).sort().map(function(a){return '<option value="'+esc(a)+'">'}).join('');eqDL();$('dlEqAll').innerHTML=[].concat.apply([],eqL().map(function(g){return g.e})).sort().map(function(a){return '<option value="'+esc(a)+'">'}).join('')}
+function eqDL(){var k=eqKey($('fAr').value),g=eqL().filter(function(x){return eqKey(x.a)===k})[0],l=g?g.e:[].concat.apply([],eqL().map(function(x){return x.e}));$('dlEqF').innerHTML=l.slice().sort().map(function(a){return '<option value="'+esc(a)+'">'}).join('')}
+$('fAr').addEventListener('input',eqDL);$('fAr').addEventListener('change',eqDL);
+function saveEq(){return setDoc(doc(fdb,'config','equipos'),{l:eqL()}).catch(dbErr)}
+function renderEq(){var l=eqL();$('eqL').innerHTML=l.map(function(g,i){return '<div class="box" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(g.a)+'</b><button class="btn s" data-qa="'+i+'" style="background:#D17F7822;color:#D17F78;border-color:#D17F78">Quitar área</button></div><div class="mt" style="margin:2px 0 8px">'+g.e.length+' equipos</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+g.e.map(function(e,j){return '<span class="tg" style="color:var(--tx);border-color:var(--bd)">'+esc(e)+' <button data-qe="'+i+'|'+j+'" aria-label="Quitar '+esc(e)+'" style="background:none;border:0;color:#D17F78;font-size:16px;padding:0 0 0 4px;cursor:pointer">✕</button></span>'}).join('')+'</div><div class="g2" style="margin-top:10px;align-items:end"><input data-ni="'+i+'" placeholder="Nuevo equipo" autocomplete="off"><button class="btn s" data-ae="'+i+'">Agregar equipo</button></div></div>'}).join('')}
+function eqMut(f){EQ=JSON.parse(JSON.stringify(eqL()));f(EQ);saveEq().then(function(){renderEq();areaDL()})}
+$('bEq').onclick=function(){$('eqNa').value='';renderEq();$('eqp').hidden=false};
+$('eqAa').onclick=function(){var v=$('eqNa').value.trim().replace(/\s+/g,' ');if(!v){warn('Escriba el nombre del área.');return}if(eqL().some(function(g){return eqKey(g.a)===eqKey(v)})){warn('Esa área ya existe.');return}$('eqNa').value='';eqMut(function(L){L.push({a:v.toUpperCase(),e:[]})})};
+$('eqL').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.qe){var q=b.dataset.qe.split('|');eqMut(function(L){L[+q[0]].e.splice(+q[1],1)})}else if(b.dataset.qa!=null){var g=eqL()[+b.dataset.qa];if(confirm('¿Quitar el área '+g.a+' y sus '+g.e.length+' equipos de la lista? Las tareas ya cargadas no se modifican.'))eqMut(function(L){L.splice(+b.dataset.qa,1)})}else if(b.dataset.ae!=null){var i=+b.dataset.ae,inp=$('eqL').querySelector('input[data-ni="'+i+'"]'),v=inp.value.trim().replace(/\s+/g,' ');if(!v){warn('Escriba el nombre del equipo.');return}if(eqL()[i].e.some(function(x){return eqKey(x)===eqKey(v)})){warn('Ese equipo ya está en el área.');return}eqMut(function(L){L[i].e.push(v.toUpperCase())})}});
 document.querySelector('#pan .tabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b)tabSet(+b.dataset.tab)});
 function close(){$('pan').hidden=true;edit=null;if(retP.length){retP.forEach(function(i){$(i).hidden=false});retP=[]}}
 $('bN').onclick=function(){open(null)};
@@ -1370,10 +1414,11 @@ function onList(e){
  if((a==='next'||a==='edit')&&!canE(t)){warn('Solo puede modificar sus propias órdenes.');return}
  if(a==='del'&&!(me&&me.rol==='supervisor')){warn('Solo los coordinadores pueden borrar órdenes.');return}
  if(a==='ped'){if(me&&me.rol)openPR(t);return}
+ if(a==='erep'){if(me&&me.rol==='supervisor')openER(t,+b.dataset.j);return}
  if(a==='dec'){if(me&&me.rol==='supervisor')openDC(t);return}
  if(a==='oti'){if(me&&me.rol==='supervisor'){var js=pend2(t);if(js.length)openDv(t,false,js)}return}
  if(a==='lleg'||a==='nolleg'){var pj=+b.dataset.j,pq=(t.pedir||[])[pj];if(!pq||!me||me.rol!=='supervisor')return;
-  if(a==='lleg'){if(!esp(pq))return;pq.lleg=true;pq.llegPor=me.nombre;pq.llegFec=dstr(jd())+'T'+hhmm();saveTask(t);render();msg('Repuesto marcado como llegado');openLG([{t:t,j:pj}])}
+  if(a==='lleg'){if(!esp(pq))return;pq.lleg=true;pq.llegPor=me.nombre;pq.llegFec=dstr(jd())+'T'+hhmm();saveTask(t);render();msg('Repuesto marcado como recibido');openLG([{t:t,j:pj}])}
   else{delete pq.lleg;delete pq.llegPor;delete pq.llegFec;saveTask(t);render();msg('Se quitó «Llegó»')}
   return}
  if(a==='pcan'){var jj=+b.dataset.j,pp=(t.pedir||[])[jj];if(!pp||!me||pp.sol!==me.nombre||pp.dec||pp.ok)return;t.pedir.splice(jj,1);saveTask(t);render();msg('Pedido cancelado');return}
@@ -1599,12 +1644,12 @@ var DVID=null,DVAP=false;
 var DVJ=null,DVD={t:0,d:0};
 function dvAuto(){var t=tasks.filter(function(x){return x.id===DVID})[0];if(!t||!DVJ)return;var sel=DVJ.filter(function(j){return DVS[j]}),nm=function(j){var p=t.pedir[j];return p.n+(p.d?' '+p.d:'')+' ×'+p.q};
  if(!DVD.t)$('dvT').value=sel.length?(sel.length===1?'Instalar '+nm(sel[0]):'Instalar repuestos: '+sel.map(function(j){return t.pedir[j].n}).join(', ')):'';
- if(!DVD.d)$('dvDe').value=sel.length?'Instalar los repuestos que llegaron para la '+fmt(t.ot)+' («'+t.titulo+'»): '+sel.map(nm).join(', ')+'.':''}
+ if(!DVD.d)$('dvDe').value=sel.length?'Instalar los repuestos recibidos para la '+fmt(t.ot)+' («'+t.titulo+'»): '+sel.map(nm).join(', ')+'.':''}
 var DVS={};
 var DVR=false;
 function openDv(t,ap,inst,rep){DVID=t.id;DVAP=ap;DVR=!!rep;DVJ=inst&&inst.length?inst.slice():null;DVD={t:0,d:0};DVS={};
  document.querySelector('#dvp h2').textContent=DVR?'Reprogramar tarea':'Planificar tarea nueva';$('dvOk').textContent=DVR?'Reprogramar':'Planificar tarea';
- $('dvO').textContent=(DVJ?'Instalar lo que llegó de ':DVR?'Reprograma ':'Surge de ')+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
+ $('dvO').textContent=(DVJ?'Instalar lo recibido de ':DVR?'Reprograma ':'Surge de ')+(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(ap?' (se aprobará al planificar)':'');
  $('dvI').hidden=!DVJ;if(DVJ){DVJ.forEach(function(j){DVS[j]=true});$('dvIL').innerHTML=DVJ.map(function(j){var p=t.pedir[j];return '<label class="ck"><input type="checkbox" data-dj2="'+j+'" checked> '+esc(p.n)+(p.d?' · '+esc(p.d):'')+' <b>× '+esc(p.q)+'</b></label>'}).join('')}
  $('dvF').textContent=t.fb||'—';
  $('dvT').value='';$('dvTp').innerHTML=TIPOS.map(function(x){var df=DVJ?'Correctivo no programado':'Correctivo programado';return '<option'+(x===df?' selected':'')+'>'+esc(x)+'</option>'}).join('');
@@ -1771,7 +1816,7 @@ function openFromBor(bo){
  var vis=[].filter.call(document.querySelectorAll('.pan'),function(p){return !p.hidden&&p.id!=='pan'}).map(function(p){return p.id});
  open(null);fromBor=bo.id;retP=vis;vis.forEach(function(i){$(i).hidden=true});
  $('pT').textContent='Nueva tarea · desde '+(bo.tipo==='nov'?'relato de anomalía':'borrador');
- $('fTi').value=bo.titulo||'';$('fEq').value=bo.equipo||'';if(bo.sector)$('fAr').value=bo.sector;
+ $('fTi').value=bo.titulo||'';$('fEq').value=bo.equipo||'';if(bo.sector)$('fAr').value=bo.sector;eqDL();
  $('fDe').value='Origen: '+(bo.origen||'Relato de anomalía')+' ('+dmy(bo.fechaPed||'')+'), informó '+(bo.pidio||'')+'.\n'+(bo.detalle||'')+'\n\nObservaciones del coordinador: ';
  if(bo.prio)$('fPr').value=bo.prio;if(bo.estMin)$('fEs').value=bo.estMin;
  fotos=(bo.fotos||[]).slice(0,3);phs();sumF();$('pan').scrollIntoView({block:'start'})}
@@ -1829,6 +1874,60 @@ $('pG').onclick=function(){
  });
 };
 var pvCur=null;
+function tItem(t,p,i,rec){var j=(t.pedir||[]).findIndex(function(x){return x.ped===p.num&&!!x.lleg===!!rec&&String(x.n)===String(i.n)&&String(x.d||'')===String(i.d||'')&&String(x.q)===String(i.q)});return j}
+function undRec(p,k){var i=p.items[k];if(!i||!i.lleg)return;var t=i.ot?tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0]:null;
+ if(t){var j=tItem(t,p,i,true);if(j>=0){var q=t.pedir[j];delete q.lleg;delete q.llegPor;delete q.llegFec;saveTask(t)}}
+ delete i.lleg;delete i.llegFec;delete i.llegPor;setDoc(doc(fdb,'pedidos',String(p.id)),p).catch(dbErr);openPV(p);render();msg('Se quitó «Recibido»')}
+function delPed(p){
+ if((p.items||[]).some(function(i){return i.lleg})){warn('Este pedido tiene repuestos recibidos. Primero toque «Deshacer» en cada uno.');return}
+ if(!confirm('¿Borrar el pedido '+fmtP(p.num)+'? Los repuestos que vienen de órdenes vuelven a «Comprar».'))return;
+ var ts={};(p.items||[]).forEach(function(i){if(!i.ot)return;var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(!t)return;var j=tItem(t,p,i,false);if(j<0)return;t.pedir[j].ok=false;delete t.pedir[j].ped;ts[t.id]=t});
+ Object.keys(ts).forEach(function(k){saveTask(ts[k])});
+ deleteDoc(doc(fdb,'pedidos',String(p.id))).then(function(){$('pv').hidden=true;render();renderPH();msg('Pedido '+fmtP(p.num)+' borrado')},dbErr)}
+var EPI=[],EPP=null;
+function drawEI(){$('eIt').innerHTML=EPI.map(function(r,k){if(r.x)return '';if(r.rec)return '<div class="box" style="opacity:.75"><b>'+esc(r.n)+'</b>'+(r.d?' · '+esc(r.d):'')+' · ×'+esc(r.q)+'<div class="mt">Recibido: no se puede cambiar</div></div>';
+ return '<div class="box"><label>Repuesto<input data-ek="'+k+'" data-ef="n" value="'+esc(r.n)+'" autocomplete="off"></label><label>Descripción<input data-ek="'+k+'" data-ef="d" value="'+esc(r.d)+'" autocomplete="off"></label><div class="g2" style="align-items:end"><label>Cantidad<input data-ek="'+k+'" data-ef="q" inputmode="numeric" value="'+esc(r.q)+'"></label><button class="btn g s" data-ex="'+k+'" style="color:#D17F78;border-color:#D17F7888">Sacar del pedido</button></div>'+(r.ot?'<div class="mt">De la orden '+esc(String(r.ot).padStart(4,'0'))+'</div>':'')+'</div>'}).join('')}
+function openEP(p){EPP=p;EPI=(p.items||[]).map(function(i,k){return{o:k,n:i.n,d:i.d||'',q:i.q,ot:i.ot||'',rec:!!i.lleg}});
+ $('epT').textContent='Editar pedido '+fmtP(p.num);setSel('eSo',CREADORES.concat(RESPONSABLES),p.sol,'Seleccionar');setSel('eTp',PTIPOS,/^Otro: /.test(p.tipo)?'Otro':p.tipo,'Seleccionar');$('eUr').value=p.urg||'Normal';
+ $('lEtO').hidden=!/^Otro: /.test(p.tipo);$('eTpO').value=/^Otro: /.test(p.tipo)?p.tipo.slice(6):'';$('ePa').value=p.para||'';$('eDe').value=p.detalle||'';drawEI();$('epp').hidden=false}
+$('eTp').addEventListener('change',function(){$('lEtO').hidden=$('eTp').value!=='Otro'});
+$('eIt').addEventListener('input',function(e){var d=e.target.dataset;if(d.ek==null)return;var r=EPI[+d.ek];if(d.ef==='q'){e.target.value=e.target.value.replace(/[^0-9]/g,'');r.q=e.target.value}else r[d.ef]=e.target.value});
+$('eIt').addEventListener('change',function(e){var d=e.target.dataset;if(d.ef==='q'){var q=parseInt(e.target.value,10);EPI[+d.ek].q=q>=1?q:1;e.target.value=EPI[+d.ek].q}});
+$('eIt').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.dataset.ex==null)return;var k=+b.dataset.ex;if(EPI[k].o==null)EPI[k].x=true;else EPI[k].x=true;drawEI()});
+$('eAd').onclick=function(){EPI.push({o:null,n:'',d:'',q:1,ot:'',rec:false});drawEI()};
+$('eX').onclick=function(){$('epp').hidden=true};
+$('eOk').onclick=function(){var p=EPP;if(!p)return;
+ if(!need([['eSo','Solicita'],['eTp','Tipo de pedido']].concat($('eTp').value==='Otro'?[['eTpO','Qué es el pedido (Otro)']]:[]).concat([['ePa','Para qué es el pedido'],['eDe','Detalle']])))return;
+ var vis=EPI.filter(function(r){return !r.x});
+ if(!vis.length){warn('El pedido necesita al menos un ítem. Si ya no corresponde, use «Borrar pedido».');return}
+ for(var a=0;a<vis.length;a++){if(!String(vis[a].n).trim()){warn('Falta el nombre de un repuesto.');return}}
+ var ts={},nuevos=[];
+ EPI.forEach(function(r){
+  if(r.o!=null){var i=p.items[r.o];if(!i||i.lleg)return;
+   var t=i.ot?tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0]:null,j=t?tItem(t,p,i,false):-1;
+   if(r.x){if(j>=0){t.pedir[j].ok=false;delete t.pedir[j].ped;ts[t.id]=t}return}
+   var q=parseInt(r.q,10);q=q>=1?q:1;
+   if(j>=0){t.pedir[j].n=String(r.n).trim();t.pedir[j].d=String(r.d).trim();t.pedir[j].q=q;ts[t.id]=t}
+   i.n=String(r.n).trim();i.d=String(r.d).trim();i.q=q;nuevos.push(i)}
+  else if(!r.x){var q2=parseInt(r.q,10);nuevos.push({n:String(r.n).trim(),d:String(r.d).trim(),q:q2>=1?q2:1,ot:''})}});
+ (p.items||[]).forEach(function(i){if(i.lleg&&nuevos.indexOf(i)<0)nuevos.push(i)});
+ p.items=nuevos.sort(function(a,b){return (a.lleg?0:1)-(b.lleg?0:1)}).length?nuevos:p.items;
+ p.sol=$('eSo').value;p.urg=$('eUr').value;p.tipo=$('eTp').value==='Otro'?'Otro: '+$('eTpO').value.trim():$('eTp').value;p.para=$('ePa').value.trim();p.detalle=$('eDe').value.trim();
+ p.edPor=me.nombre;p.edFec=dstr(jd())+'T'+hhmm();
+ setDoc(doc(fdb,'pedidos',String(p.id)),p).then(function(){Object.keys(ts).forEach(function(k){saveTask(ts[k])});$('epp').hidden=true;openPV(p);render();msg('Pedido '+fmtP(p.num)+' actualizado')},dbErr)};
+// editar un repuesto desde la orden
+var ERI=null;
+function openER(t,j){var p=t.pedir[j];if(!p)return;ERI={id:t.id,j:j};$('erT').textContent=(t.ot?fmt(t.ot)+' · ':'')+t.titulo+(p.ped?' · en el pedido '+fmtP(p.ped):'');$('erN').value=p.n||'';$('erD').value=p.d||'';$('erQ').value=p.q||1;$('erM').textContent=p.ped?'Este repuesto ya está en un pedido: el cambio se refleja también en el pedido.':'';$('erp').hidden=false}
+$('erQ').addEventListener('input',function(){this.value=this.value.replace(/[^0-9]/g,'')});
+$('erX').onclick=function(){$('erp').hidden=true};
+$('erOk').onclick=function(){if(!ERI)return;var t=tasks.filter(function(x){return x.id===ERI.id})[0],p=t&&t.pedir[ERI.j];if(!p||!me||me.rol!=='supervisor')return;
+ if(!need([['erN','Repuesto']]))return;if(p.lleg){warn('Este repuesto ya fue recibido.');return}
+ var o={n:p.n,d:p.d||'',q:p.q},q=parseInt($('erQ').value,10);q=q>=1?q:1;
+ var d=p.ped?peds.filter(function(x){return x.num===p.ped})[0]:null,it=d?(d.items||[]).filter(function(x){return String(x.ot)===String(t.ot||'')&&!x.lleg&&String(x.n)===String(o.n)&&String(x.d||'')===String(o.d)&&String(x.q)===String(o.q)})[0]:null;
+ p.n=$('erN').value.trim();p.d=$('erD').value.trim();p.q=q;p.edPor=me.nombre;p.edFec=dstr(jd())+'T'+hhmm();saveTask(t);
+ if(it){it.n=p.n;it.d=p.d;it.q=q;setDoc(doc(fdb,'pedidos',String(d.id)),d).catch(dbErr)}
+ $('erp').hidden=true;render();msg('Repuesto actualizado')};
+
 function pvTxt(p){var x='PEDIDO '+fmtP(p.num)+'\nFecha: '+dmy(p.fecha)+' '+(p.hora||'')+'\nSolicita: '+p.sol+'\nUrgencia: '+p.urg+'\nTipo: '+p.tipo+'\nPara qué: '+p.para+'\n\nDetalle:\n'+p.detalle+'\n\nÍtems:\n';x+=(p.items||[]).map(function(i){return '- '+i.n+(i.d?' ('+i.d+')':'')+' x '+i.q+(i.ot?' [OT-'+String(i.ot).padStart(4,'0')+']':'')}).join('\n');if((p.fotos||[]).length)x+='\n\nFotos: '+p.fotos.length+' (ver en la aplicación)';return x}
 function openPV(p){
  pvCur=p;
@@ -1836,13 +1935,17 @@ function openPV(p){
  h+='<div class="box"><div class="cp">'+chp('#E08A2E',p.tipo)+'</div><b>'+esc(p.para)+'</b><div class="det" style="margin-top:6px">'+esc(p.detalle)+'</div>';
  if((p.fotos||[]).length)h+='<div class="fl">'+p.fotos.map(function(x){return '<img class="im" alt="Foto" src="'+fsrc(x)+'">'}).join('')+'</div>';
  var cor=me&&me.rol==='supervisor',pen=(p.items||[]).filter(function(i){return !i.lleg}).length;
- h+='</div><div class="box"><table><tr><th>Ítem</th><th>OT</th><th>Cant.</th><th>Llegó</th></tr>'+(p.items||[]).map(function(i,k){return '<tr><td>'+esc(i.n)+(i.d?'<br><small>'+esc(i.d)+'</small>':'')+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'—')+'</td><td>'+esc(i.q)+'</td><td>'+(i.lleg?chp('#78AD8B','Sí'+(i.llegFec?' · '+dmy(String(i.llegFec).slice(0,10)):'')):(cor?'<input type="checkbox" class="pvc" data-pl="'+k+'" aria-label="Marcar que llegó">':'—'))+'</td></tr>'}).join('')+'</table></div>';
- if(cor&&pen)h+='<div class="ac"><button class="btn s" data-pm="sel" style="background:#78AD8B">Marcar lo tildado como llegado</button><button class="btn g s" data-pm="all">Llegó todo lo que falta</button></div>';
+ h+='</div><div class="box"><table><tr><th>Ítem</th><th>OT</th><th>Cant.</th><th>Recibido</th></tr>'+(p.items||[]).map(function(i,k){return '<tr><td>'+esc(i.n)+(i.d?'<br><small>'+esc(i.d)+'</small>':'')+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'—')+'</td><td>'+esc(i.q)+'</td><td>'+(i.lleg?chp('#78AD8B','Sí'+(i.llegFec?' · '+dmy(String(i.llegFec).slice(0,10)):''))+(cor?'<br><button class="btn g s" data-pm="und" data-k="'+k+'" style="margin-top:4px;min-height:32px;padding:4px 10px">Deshacer</button>':''):(cor?'<input type="checkbox" class="pvc" data-pl="'+k+'" aria-label="Marcar como recibido">':'—'))+'</td></tr>'}).join('')+'</table></div>';
+ if(cor&&pen)h+='<div class="ac"><button class="btn s" data-pm="sel" style="background:#78AD8B">Marcar lo tildado como recibido</button><button class="btn g s" data-pm="all">Se recibió todo lo que falta</button></div>';
+ if(cor)h+='<div class="ac"><button class="btn g s" data-pm="edit">Editar pedido</button><button class="btn g s" data-pm="del" style="color:#D17F78;border-color:#D17F7888">Borrar pedido</button></div>';
  $('pvB').innerHTML=h;$('pv').hidden=false;
 }
 $('pvB').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.pm||!pvCur||!me||me.rol!=='supervisor')return;
+ if(b.dataset.pm==='edit'){openEP(pvCur);return}
+ if(b.dataset.pm==='del'){delPed(pvCur);return}
+ if(b.dataset.pm==='und'){undRec(pvCur,+b.dataset.k);return}
  var p=pvCur,ks=[];(p.items||[]).forEach(function(i,k){if(i.lleg)return;if(b.dataset.pm==='all'||document.querySelector('#pvB [data-pl="'+k+'"]:checked'))ks.push(k)});
- if(!ks.length){warn('Por favor, tilde los repuestos que llegaron.');return}
+ if(!ks.length){warn('Por favor, tilde los repuestos recibidos.');return}
  var now=dstr(jd())+'T'+hhmm(),found=[],ts={};
  ks.forEach(function(k){var i=p.items[k];i.lleg=true;i.llegFec=now;i.llegPor=me.nombre;
   if(!i.ot)return;var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(!t)return;
@@ -1850,7 +1953,7 @@ $('pvB').addEventListener('click',function(e){var b=e.target.closest('button');i
   if(j<0)return;var q=t.pedir[j];q.lleg=true;q.llegPor=me.nombre;q.llegFec=now;ts[t.id]=t;found.push({t:t,j:j})});
  setDoc(doc(fdb,'pedidos',String(p.id)),p).catch(dbErr);
  Object.keys(ts).forEach(function(k){saveTask(ts[k])});
- openPV(p);render();msg(ks.length===1?'Repuesto marcado como llegado':ks.length+' repuestos marcados como llegados');
+ openPV(p);render();msg(ks.length===1?'Repuesto marcado como recibido':ks.length+' repuestos marcados como recibidos');
  if(found.length)openLG(found)});
 $('pvC').onclick=function(){if(pvCur)copyTxt(pvTxt(pvCur)).then(function(){msg('Texto copiado. Ya puede pegarlo en el correo.')},function(){warn('No se pudo copiar. Intente desde la página publicada.')})};
 $('pvP').onclick=function(){
@@ -1949,7 +2052,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 function show(id){
  VW.forEach(function(x){$(x).hidden=x!==id});
  [].forEach.call(document.querySelectorAll('#nav button'),function(b){b.classList.toggle('on',b.dataset.v===id)});
- ['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp'].forEach(function(x){$(x).hidden=true});edit=null;
+ ['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp','eqp','erp','epp'].forEach(function(x){$(x).hidden=true});edit=null;
  window.scrollTo(0,0);if(id==='dp')renderDash();
 }
 $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
@@ -1957,7 +2060,7 @@ $('nav').addEventListener('click',function(e){var b=e.target.closest('button');i
   if(op.length){var t=op[op.length-1];t.hidden=true;if(t.id==='pan')edit=null}else if(!$('v1').hidden===false){show('v1')}return}
  show(b.dataset.v)});
 document.addEventListener('click',function(e){var b=e.target.closest('.bk');if(b){$(b.dataset.bk).hidden=true;if(b.dataset.bk==='pan')edit=null}});
-['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp'].forEach(function(id){new MutationObserver(function(){if(!$(id).hidden){$(id).scrollTop=0}}).observe($(id),{attributes:true,attributeFilter:['hidden']})});
+['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp','eqp','erp','epp'].forEach(function(id){new MutationObserver(function(){if(!$(id).hidden){$(id).scrollTop=0}}).observe($(id),{attributes:true,attributeFilter:['hidden']})});
 $('fQ').addEventListener('input',render);
 document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.classList&&d.classList.contains('mo'))openD[d.dataset.id]=d.open},true);
 var VER=(document.querySelector('meta[name="app-version"]')||{}).content||'';
@@ -2031,6 +2134,7 @@ function startData(){if(started)return;started=true;
 if(me.rol==='supervisor')onSnapshot(collection(fdb,'presencia'),function(q){pres=q.docs.map(function(d){return d.data()});if(!$('pr').hidden)renderPr()},function(){});
 
 onSnapshot(collection(fdb,'mejoras'),function(q){MEJ=q.docs.map(function(d){return d.data()});if(!$('mp').hidden)renderMj()},function(){});
+onSnapshot(doc(fdb,'config','equipos'),function(d){var x=d.exists()?d.data():{};EQ=x.l&&x.l.length?x.l:null;areaDL();if(!$('eqp').hidden)renderEq()},function(){});
 onSnapshot(doc(fdb,'config','respaldo'),function(d){RESP=d.exists()?d.data():{};resAviso()},function(){});
 onSnapshot(doc(fdb,'config','turnos'),function(d){var x=d.exists()?d.data():{};TUR={sem:x.sem||{},cambios:x.cambios||[]};turReady=true;if(!$('tp').hidden)renderTu();aviso();render()},function(){turReady=true});
 onSnapshot(doc(fdb,'config','feriados'),function(d){var x=d.exists()?d.data():{};FER=x.f||{};SEM=x.sem||SEM0();HRS=x.hr||{1:8,2:8,3:8,4:8,5:8,6:7,0:8};ferReady=true;if(!$('fp').hidden)renderFer();render();genAll()},function(){ferReady=true;genAll()});
@@ -2054,7 +2158,7 @@ $('lgF').addEventListener('submit',function(e){e.preventDefault();
 function applyRole(){setTimeout(mgUpd,0);HOYF=(me.rol==='tecnico'&&RESPONSABLES.indexOf(me.nombre)>=0)?me.nombre:'';
  var sup=me.rol==='supervisor',pb=document.querySelector('#nav button[data-v=v3]');
  if(pb)pb.style.display=sup?'':'none';$('bPr').style.display=sup?'':'none';
- $('bPed').style.display=sup?'':'none';$('bRp').style.display=sup?'':'none';$('bJ').style.display=sup?'':'none';$('bGs').style.display=sup?'':'none';$('bFe').style.display=sup?'':'none';$('bTu').style.display=sup?'':'none';aviso();
+ $('bPed').style.display=sup?'':'none';$('bRp').style.display=sup?'':'none';$('bJ').style.display=sup?'':'none';$('bGs').style.display=sup?'':'none';$('bFe').style.display=sup?'':'none';$('bEq').style.display=sup?'':'none';$('bTu').style.display=sup?'':'none';aviso();
  $('sesT').textContent='Sesión: '+me.nombre+' · '+(sup?'Coordinador':'Técnico');
  if(!sup&&!$('v3').hidden)show('v1')}
 onAuthStateChanged(auth,async function(u){
