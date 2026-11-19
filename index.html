@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.20 · 19/11/2026 18:59">
+<meta name="app-version" content="V2.21 · 19/11/2026 19:54">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -140,6 +140,7 @@ body{background:#fff}
 @media(min-width:1000px){.w{max-width:1180px}#nav .ni{max-width:1180px}#err,#okm,#upd{max-width:1156px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 #lgn{position:fixed;inset:0;z-index:100;background:var(--bg);overflow:auto;display:flex;align-items:center;justify-content:center;padding:20px}#lgn[hidden]{display:none}#lgn .bx{width:100%;max-width:380px;margin:0}#lgn h1{margin:8px 0 4px;font-size:26px}#lgM{color:#F0A8A0;min-height:22px;font-size:14px;margin-top:6px}
+.ftb{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:12px 0}.ftb button{border:1px solid var(--ln);background:transparent;color:var(--mu);border-radius:9px;padding:10px 4px;font-weight:700;font-size:13px;min-height:44px;cursor:pointer}.ftb button.on{background:#E08A2E22;border-color:var(--ac);color:var(--ac)}.bnr{display:block;width:100%;text-align:left;background:#E08A2E18;border:1px solid var(--ac);border-radius:12px;padding:11px;margin-bottom:10px;color:var(--ink);font-size:14px;cursor:pointer}.bnr small{display:block;color:var(--mu);font-size:12px;margin-top:2px}
 </style>
 </head>
 <body>
@@ -223,7 +224,8 @@ body{background:#fff}
 <div id="mgL">
 <button class="act" id="mgc1" data-mg="1"><div class="ic" style="background:#D6B85F26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D6B85F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/></svg></div><div><b>Comunicación</b><span class="d">Notificaciones, cambio de turno, relatos</span></div><span class="mgb" style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
 <button class="act" id="mgc2" data-mg="2"><div class="ic" style="background:#7FA3D126"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7FA3D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 11a3 3 0 1 0 0-6M18 20c0-2.5-1-4.6-3-5.5"/></svg></div><div><b>Personal</b><span class="d">Turnos, permisos y novedades</span></div><span class="mgb" style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
-<button class="act" id="mgc3" data-mg="3"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.5 11h10.5l2-8H6"/></svg></div><div><b>Repuestos y pedidos</b><span class="d">Realizar pedido y repuestos cambiados</span></div><span class="mgb" style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
+<button class="act" id="bPed"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h10.2L20 7H6.2"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg></div><div><b>Pedidos</b><span class="d">Pedir, seguir y recibir repuestos</span></div><span id="pBd" style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
+<button class="act" id="bRc"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div><div><b>Reemplazo de repuestos</b><span class="d">Repuestos cambiados en cada equipo</span></div><span style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
 <button class="act" id="mgc4" data-mg="4"><div class="ic" style="background:#A592CC26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A592CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 13h6M9 17h6"/></svg></div><div><b>Ayuda</b><span class="d">Cómo usar la app y guías en PDF</span></div><span class="mgb" style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
 <button class="act" id="mgc5" data-mg="5"><div class="ic" style="background:#78AD8B26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#78AD8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div><div><b>Cuenta y datos</b><span class="d">Exportar, contraseña y cerrar sesión</span></div><span class="mgb" style="margin-left:auto"></span><span style="color:#777;font-size:22px;margin-left:6px">›</span></button>
 </div>
@@ -238,10 +240,6 @@ body{background:#fff}
 <button class="act" id="bEq"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V9l6 3V9l6 3V5h6v16z"/></svg></div><div><b>Áreas y equipos</b><span class="d">Lista para elegir al cargar tareas</span></div></button>
 <button class="act" id="bJ"><div class="ic" style="background:#78AD8B26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#78AD8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>Novedades del personal</b><span class="d">Turnos de 12 h, ausencias, permisos y horas extra</span></div><span id="jPend" style="margin-left:auto"></span></button>
 <button class="act" id="bSol"><div class="ic" style="background:#D0A86826"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D0A868" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/></svg></div><div><b>Solicitar vacaciones o permiso</b><span class="d">Para su aprobación por el coordinador</span></div></button>
-</div>
-<div class="mgv" id="mg3" hidden><button class="bk2" data-mg="home">‹ Más</button><h2 style="margin:0 0 12px;font-size:20px">Repuestos y pedidos</h2>
-<button class="act" id="bPed"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h10.2L20 7H6.2"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg></div><div><b>Realizar pedido</b><span class="d">Repuestos y materiales a pedir</span></div><span id="pBd" style="margin-left:auto"></span></button>
-<button class="act" id="bRc"><div class="ic" style="background:#E08A2E26"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E08A2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div><div><b>Repuestos cambiados</b><span class="d">Historial por equipo, con búsqueda</span></div></button>
 </div>
 <div class="mgv" id="mg4" hidden><button class="bk2" data-mg="home">‹ Más</button><h2 style="margin:0 0 12px;font-size:20px">Ayuda</h2>
 <button class="act" id="bPcd"><div class="ic" style="background:#7FA3D126"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7FA3D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4zM9 9h6M9 13h6"/></svg></div><div><b>Cómo usar la app</b><span class="d">Paso a paso para cada tarea</span></div></button>
@@ -536,6 +534,14 @@ body{background:#fff}
 <div class="ac"><button class="btn" id="cS">Convertir en OT</button></div>
 </div>
 
+<div class="pan" id="pdl" hidden>
+<button class="bk" data-bk="pdl">‹ Más</button>
+<h2>Pedidos</h2>
+<div class="ac" style="margin-top:0"><button class="btn" id="pdN" style="width:100%">+ Nuevo pedido</button></div>
+<div id="pdX" style="margin-top:12px"></div>
+<div class="ftb" id="pdT"></div>
+<div id="pdG"></div>
+</div>
 <div class="pan" id="pp" hidden>
 <button class="bk" data-bk="pp">‹ Volver</button>
 <h2>Realizar pedido</h2>
@@ -557,8 +563,6 @@ body{background:#fff}
 <button class="btn g s" data-add="pitems">Agregar ítem</button>
 <div class="mt" id="pCnt" style="margin-top:10px"></div>
 <div class="ac"><button class="btn" id="pG">Generar pedido</button></div>
-<div class="sec">Pedidos anteriores</div>
-<div id="pH"></div>
 </div>
 
 <div class="pan" id="rc" hidden>
@@ -609,7 +613,8 @@ body{background:#fff}
 <div class="pan" id="pv" hidden>
 <button class="bk" data-bk="pv">‹ Volver</button>
 <div id="pvB"></div>
-<div class="ac"><button class="btn" id="pvC">Copiar para correo</button><button class="btn g" id="pvP">Imprimir / PDF</button></div>
+<div class="ac"><button class="btn" id="pvC">Copiar para correo</button><button class="btn g" id="pvP">Imprimir / PDF</button><button class="btn g" id="pvE">Editar pedido</button></div>
+<div class="ac" id="pvDW" style="margin-top:22px;padding-top:14px;border-top:1px solid var(--ln)"><button class="btn g" id="pvD" style="color:var(--rd);border-color:#D17F7888">Borrar pedido</button></div>
 </div>
 
 <div class="pan" id="erp" hidden>
@@ -991,7 +996,7 @@ function render(){
  var rz=tasks.filter(function(t){return t.rehaceDe&&t.estado==='pendiente'}),rv=tasks.filter(function(t){return t.rev==='revision'||sinTomar(t)});
  $('rhz').innerHTML=rz.length?'<div class="al"><h2>Tareas para rehacer ('+rz.length+')</h2>'+rz.map(cardH).join('')+'</div>':'';
  $('bgI').hidden=!rz.length;$('bgI').textContent=rz.length;$('bgP').hidden=!rv.length;$('bgP').textContent=rv.length;
- var np_=0;tasks.forEach(function(t){np_+=nPed(t)});$('pBd').innerHTML=np_?'<span class="tg" style="color:#E08A2E;background:#E08A2E26;border-color:#E08A2E55">'+np_+' a pedir</span>':'';if(!$('pp').hidden)renderPI();
+ var np_=0;tasks.forEach(function(t){np_+=nPed(t)});$('pBd').innerHTML=np_?'<span class="tg" style="color:#E08A2E;background:#E08A2E26;border-color:#E08A2E55">'+np_+' a pedir</span>':'';if(!$('pp').hidden)renderPI();if(!$('pdl').hidden)renderPH();
  $('vPend').innerHTML=rv.length?chp('#D6B85F',rv.length+(rv.length===1?' tarea':' tareas')):'';if(!$('vp').hidden)renderV();
  var hs=dstr(jd());
  var dia=tasks.filter(function(t){return t.fecha===hs&&hTec(t,HOYF)}).sort(hSort),prev=tasks.filter(function(t){return isOpen(t)&&t.fecha&&t.fecha<hs&&hTec(t,HOYF)}).sort(hSort);
@@ -1851,10 +1856,23 @@ function renderPI(){
 }
 $('piOT').addEventListener('change',function(e){if(e.target.dataset.ps){PS[e.target.dataset.ps]=e.target.checked;pcount()}});
 $('piL').addEventListener('input',pcount);$('piL').addEventListener('click',function(){setTimeout(pcount,0)});$('pp').addEventListener('click',function(e){if(e.target.dataset&&e.target.dataset.add==='pitems')setTimeout(pcount,0)});
-function renderPH(){var l=peds.slice().sort(function(a,b){return b.num-a.num}).slice(0,8);$('pH').innerHTML=l.length?l.map(function(p){return '<button class="act" data-pv="'+p.id+'" style="min-height:52px;margin-bottom:8px"><div><b>'+fmtP(p.num)+' · '+esc(p.tipo)+'</b><span class="d">'+esc(dmy(p.fecha))+' · '+(p.items||[]).length+' ítems · '+esc(p.para)+'</span></div></button>'}).join(''):'<div class="em">Todavía no hay pedidos.</div>'}
-$('pH').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.pv)return;var p=peds.filter(function(x){return String(x.id)===b.dataset.pv})[0];if(p)openPV(p)});
-$('bPed').onclick=function(){var w=me.nombre||'';
- setSel('pSo',CREADORES.concat(RESPONSABLES),w,'Seleccionar');setSel('pTp',PTIPOS,'','Seleccionar');$('pTpO').value='';$('lPtO').hidden=true;$('pUr').value='Normal';['pPa','pDe'].forEach(function(i){$(i).value=''});FB.p=[];phx('p');$('pMsg').textContent='';L.pitems=[];rows('pitems');PS={};renderPI();renderPH();$('pp').hidden=false};
+var PDF='p';
+function pedStat(p){var n=(p.items||[]).length,r=(p.items||[]).filter(function(x){return x.lleg}).length;return n&&r===n?'k':r?'c':'p'}
+function recSin(){var o=[];tasks.forEach(function(t){pend2(t).forEach(function(j){o.push({t:t,j:j})})});return o}
+function renderPH(){if(!$('pdG'))return;
+ var all=peds.slice().sort(function(a,b){return b.num-a.num}),c={p:0,c:0,k:0};all.forEach(function(x){c[pedStat(x)]++});
+ var np=pend().length,nr=recSin().length;
+ $('pdX').innerHTML=(np?'<button class="bnr" data-px="np"><b>Por pedir: '+np+(np===1?' repuesto':' repuestos')+'</b><small>Listos para comprar, todavía sin pedido. Toque para armar el pedido.</small></button>':'')+(nr?'<button class="bnr" data-px="nr" style="border-color:#78AD8B;background:#78AD8B18"><b>Recibidos sin instalar: '+nr+(nr===1?' repuesto':' repuestos')+'</b><small>Toque para crear la OT de instalación si hace falta.</small></button>':'');
+ $('pdT').innerHTML=[['p','Pendientes'],['c','En curso'],['k','Completados']].map(function(x){return '<button data-ft="'+x[0]+'"'+(PDF===x[0]?' class="on"':'')+'>'+x[1]+' · '+c[x[0]]+'</button>'}).join('');
+ var l=all.filter(function(x){return pedStat(x)===PDF});
+ $('pdG').innerHTML=l.length?l.map(function(x){var n=(x.items||[]).length,r=(x.items||[]).filter(function(i){return i.lleg}).length,st=pedStat(x);return '<button class="act" data-pv="'+x.id+'" style="min-height:52px;margin-bottom:8px"><div><b>'+fmtP(x.num)+' · '+esc(x.tipo)+'</b><span class="d">'+esc(dmy(x.fecha))+' · '+n+(n===1?' ítem':' ítems')+' · '+esc(x.para)+'</span><span style="margin-top:6px;display:inline-block">'+(st==='k'?chp('#78AD8B','Completo'):st==='c'?chp('#D6B85F','Faltan '+(n-r)+' de '+n):chp('#D6B85F','Esperando · 0 de '+n))+'</span></div></button>'}).join(''):'<div class="em">'+(PDF==='p'?'No hay pedidos pendientes.':PDF==='c'?'No hay pedidos en curso.':'Todavía no hay pedidos completados.')+'</div>'}
+$('pdT').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.ft)return;PDF=b.dataset.ft;renderPH()});
+$('pdX').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.px==='np')openNewPed();else if(b.dataset.px==='nr')openLG(recSin())});
+$('pdG').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.pv)return;var q=peds.filter(function(x){return String(x.id)===b.dataset.pv})[0];if(q)openPV(q)});
+function openNewPed(){var w=me.nombre||'';
+ setSel('pSo',CREADORES.concat(RESPONSABLES),w,'Seleccionar');setSel('pTp',PTIPOS,'','Seleccionar');$('pTpO').value='';$('lPtO').hidden=true;$('pUr').value='Normal';['pPa','pDe'].forEach(function(i){$(i).value=''});FB.p=[];phx('p');$('pMsg').textContent='';L.pitems=[];rows('pitems');PS={};renderPI();$('pp').hidden=false}
+$('bPed').onclick=function(){PDF='p';renderPH();$('pdl').hidden=false};
+$('pdN').onclick=openNewPed;
 function nextPed(cb){nextCnt('ped',cb,$('pG'))}
 $('pG').onclick=function(){
  if(!need([['pSo','Solicita'],['pTp','Tipo de pedido']].concat($('pTp').value==='Otro'?[['pTpO','Qué es el pedido (Otro)']]:[]).concat([['pPa','Para qué es el pedido'],['pDe','Detalle']])))return;
@@ -1877,7 +1895,7 @@ var pvCur=null;
 function tItem(t,p,i,rec){var j=(t.pedir||[]).findIndex(function(x){return x.ped===p.num&&!!x.lleg===!!rec&&String(x.n)===String(i.n)&&String(x.d||'')===String(i.d||'')&&String(x.q)===String(i.q)});return j}
 function undRec(p,k){var i=p.items[k];if(!i||!i.lleg)return;var t=i.ot?tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0]:null;
  if(t){var j=tItem(t,p,i,true);if(j>=0){var q=t.pedir[j];delete q.lleg;delete q.llegPor;delete q.llegFec;saveTask(t)}}
- delete i.lleg;delete i.llegFec;delete i.llegPor;setDoc(doc(fdb,'pedidos',String(p.id)),p).catch(dbErr);openPV(p);render();msg('Se quitó «Recibido»')}
+ delete i.lleg;delete i.llegFec;delete i.llegPor;setDoc(doc(fdb,'pedidos',String(p.id)),p).catch(dbErr);openPV(p);render();renderPH();msg('Se quitó «Recibido»')}
 function delPed(p){
  if((p.items||[]).some(function(i){return i.lleg})){warn('Este pedido tiene repuestos recibidos. Primero toque «Deshacer» en cada uno.');return}
  if(!confirm('¿Borrar el pedido '+fmtP(p.num)+'? Los repuestos que vienen de órdenes vuelven a «Comprar».'))return;
@@ -1934,27 +1952,27 @@ function openPV(p){
  var h='<h2>Pedido '+fmtP(p.num)+'</h2><div class="mt">'+esc(dmy(p.fecha))+' · Solicita: '+esc(p.sol)+' · Urgencia: '+esc(p.urg)+'</div>';
  h+='<div class="box"><div class="cp">'+chp('#E08A2E',p.tipo)+'</div><b>'+esc(p.para)+'</b><div class="det" style="margin-top:6px">'+esc(p.detalle)+'</div>';
  if((p.fotos||[]).length)h+='<div class="fl">'+p.fotos.map(function(x){return '<img class="im" alt="Foto" src="'+fsrc(x)+'">'}).join('')+'</div>';
- var cor=me&&me.rol==='supervisor',pen=(p.items||[]).filter(function(i){return !i.lleg}).length;
- h+='</div><div class="box"><table><tr><th>Ítem</th><th>OT</th><th>Cant.</th><th>Recibido</th></tr>'+(p.items||[]).map(function(i,k){return '<tr><td>'+esc(i.n)+(i.d?'<br><small>'+esc(i.d)+'</small>':'')+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'—')+'</td><td>'+esc(i.q)+'</td><td>'+(i.lleg?chp('#78AD8B','Sí'+(i.llegFec?' · '+dmy(String(i.llegFec).slice(0,10)):''))+(cor?'<br><button class="btn g s" data-pm="und" data-k="'+k+'" style="margin-top:4px;min-height:32px;padding:4px 10px">Deshacer</button>':''):(cor?'<input type="checkbox" class="pvc" data-pl="'+k+'" aria-label="Marcar como recibido">':'—'))+'</td></tr>'}).join('')+'</table></div>';
- if(cor&&pen)h+='<div class="ac"><button class="btn s" data-pm="sel" style="background:#78AD8B">Marcar lo tildado como recibido</button><button class="btn g s" data-pm="all">Se recibió todo lo que falta</button></div>';
- if(cor)h+='<div class="ac"><button class="btn g s" data-pm="edit">Editar pedido</button><button class="btn g s" data-pm="del" style="color:#D17F78;border-color:#D17F7888">Borrar pedido</button></div>';
- $('pvB').innerHTML=h;$('pv').hidden=false;
+ var cor=me&&me.rol==='supervisor',tot=(p.items||[]).length,rc=(p.items||[]).filter(function(i){return i.lleg}).length;
+ h+='</div><div style="margin:8px 0">'+(tot&&rc===tot?chp('#78AD8B','Completo'):rc?chp('#D6B85F','Faltan '+(tot-rc)+' de '+tot):chp('#D6B85F','Esperando · 0 de '+tot))+'</div>';
+ h+='<div class="box"><table><tr><th>Ítem</th><th>OT</th><th>Cant.</th><th>Estado</th></tr>'+(p.items||[]).map(function(i,k){return '<tr><td>'+esc(i.n)+(i.d?'<br><small>'+esc(i.d)+'</small>':'')+'</td><td>'+(i.ot?String(i.ot).padStart(4,'0'):'—')+'</td><td>'+esc(i.q)+'</td><td>'+(i.lleg?chp('#78AD8B','Recibido'+(i.llegFec?' · '+dmy(String(i.llegFec).slice(0,10)):''))+(cor?'<br><button class="btn g s" data-pm="und" data-k="'+k+'" style="margin-top:4px;min-height:32px;padding:4px 10px">Deshacer</button>':''):(cor?'<button class="btn s" data-pm="rec" data-k="'+k+'" style="background:#78AD8B;min-height:40px">Recibido</button>':'Esperando'))+'</td></tr>'}).join('')+'</table></div>';
+ var sin=[];(p.items||[]).forEach(function(i){if(!i.lleg||!i.ot)return;var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(!t)return;var j=tItem(t,p,i,true);if(j>=0&&!t.pedir[j].inst)sin.push({t:t,j:j})});
+ if(cor&&sin.length)h+='<div class="box"><b>Recibido sin instalar: '+sin.length+(sin.length===1?' repuesto':' repuestos')+'</b><div class="mt" style="margin:4px 0 8px">Si hace falta instalarlo, cree la OT. No se crea nada hasta que usted confirme.</div><button class="btn s" data-pm="inst">Crear OT para instalar</button></div>';
+ $('pvB').innerHTML=h;$('pvE').style.display=cor?'':'none';$('pvDW').style.display=cor?'':'none';$('pv').hidden=false;
 }
 $('pvB').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||!b.dataset.pm||!pvCur||!me||me.rol!=='supervisor')return;
- if(b.dataset.pm==='edit'){openEP(pvCur);return}
- if(b.dataset.pm==='del'){delPed(pvCur);return}
- if(b.dataset.pm==='und'){undRec(pvCur,+b.dataset.k);return}
- var p=pvCur,ks=[];(p.items||[]).forEach(function(i,k){if(i.lleg)return;if(b.dataset.pm==='all'||document.querySelector('#pvB [data-pl="'+k+'"]:checked'))ks.push(k)});
- if(!ks.length){warn('Por favor, tilde los repuestos recibidos.');return}
- var now=dstr(jd())+'T'+hhmm(),found=[],ts={};
- ks.forEach(function(k){var i=p.items[k];i.lleg=true;i.llegFec=now;i.llegPor=me.nombre;
-  if(!i.ot)return;var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(!t)return;
-  var j=(t.pedir||[]).findIndex(function(x){return x.ped===p.num&&!x.lleg&&String(x.n)===String(i.n)&&String(x.d||'')===String(i.d||'')&&String(x.q)===String(i.q)});
-  if(j<0)return;var q=t.pedir[j];q.lleg=true;q.llegPor=me.nombre;q.llegFec=now;ts[t.id]=t;found.push({t:t,j:j})});
+ var p=pvCur;
+ if(b.dataset.pm==='und'){undRec(p,+b.dataset.k);return}
+ if(b.dataset.pm==='inst'){var f=[];(p.items||[]).forEach(function(i){if(!i.lleg||!i.ot)return;var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(!t)return;var j=tItem(t,p,i,true);if(j>=0)f.push({t:t,j:j})});if(!openLG(f))warn('No hay repuestos recibidos para instalar.');return}
+ if(b.dataset.pm!=='rec')return;
+ var k=+b.dataset.k,i=p.items[k];if(!i||i.lleg)return;
+ var now=dstr(jd())+'T'+hhmm(),ts={};
+ i.lleg=true;i.llegFec=now;i.llegPor=me.nombre;
+ if(i.ot){var t=tasks.filter(function(x){return String(x.ot)===String(i.ot)})[0];if(t){var j=tItem(t,p,i,false);if(j>=0){var q=t.pedir[j];q.lleg=true;q.llegPor=me.nombre;q.llegFec=now;ts[t.id]=t}}}
  setDoc(doc(fdb,'pedidos',String(p.id)),p).catch(dbErr);
- Object.keys(ts).forEach(function(k){saveTask(ts[k])});
- openPV(p);render();msg(ks.length===1?'Repuesto marcado como recibido':ks.length+' repuestos marcados como recibidos');
- if(found.length)openLG(found)});
+ Object.keys(ts).forEach(function(x){saveTask(ts[x])});
+ openPV(p);render();renderPH();msg('Repuesto marcado como recibido')});
+$('pvE').onclick=function(){if(pvCur&&me&&me.rol==='supervisor')openEP(pvCur)};
+$('pvD').onclick=function(){if(pvCur&&me&&me.rol==='supervisor')delPed(pvCur)};
 $('pvC').onclick=function(){if(pvCur)copyTxt(pvTxt(pvCur)).then(function(){msg('Texto copiado. Ya puede pegarlo en el correo.')},function(){warn('No se pudo copiar. Intente desde la página publicada.')})};
 $('pvP').onclick=function(){
  var p=pvCur;if(!p)return;
@@ -2052,7 +2070,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 function show(id){
  VW.forEach(function(x){$(x).hidden=x!==id});
  [].forEach.call(document.querySelectorAll('#nav button'),function(b){b.classList.toggle('on',b.dataset.v===id)});
- ['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp','eqp','erp','epp'].forEach(function(x){$(x).hidden=true});edit=null;
+ ['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp','eqp','erp','epp','pdl'].forEach(function(x){$(x).hidden=true});edit=null;
  window.scrollTo(0,0);if(id==='dp')renderDash();
 }
 $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
@@ -2060,7 +2078,7 @@ $('nav').addEventListener('click',function(e){var b=e.target.closest('button');i
   if(op.length){var t=op[op.length-1];t.hidden=true;if(t.id==='pan')edit=null}else if(!$('v1').hidden===false){show('v1')}return}
  show(b.dataset.v)});
 document.addEventListener('click',function(e){var b=e.target.closest('.bk');if(b){$(b.dataset.bk).hidden=true;if(b.dataset.bk==='pan')edit=null}});
-['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp','eqp','erp','epp'].forEach(function(id){new MutationObserver(function(){if(!$(id).hidden){$(id).scrollTop=0}}).observe($(id),{attributes:true,attributeFilter:['hidden']})});
+['qp','rp','pan','jp','sp','vp','np','bp','bf','cp','pp','pv','rc','rf','pw','nl','pr','ct','nt','pcd','fp','tp','mp','zp','rpt','dvp','rbp','prp','dcp','lgp','eqp','erp','epp','pdl'].forEach(function(id){new MutationObserver(function(){if(!$(id).hidden){$(id).scrollTop=0}}).observe($(id),{attributes:true,attributeFilter:['hidden']})});
 $('fQ').addEventListener('input',render);
 document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.classList&&d.classList.contains('mo'))openD[d.dataset.id]=d.open},true);
 var VER=(document.querySelector('meta[name="app-version"]')||{}).content||'';
