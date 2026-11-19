@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mantenimiento</title>
-<meta name="app-version" content="V2.17 · 18/11/2026 19:11">
+<meta name="app-version" content="V2.18 · 18/11/2026 21:33">
 <meta name="theme-color" content="#1E2329">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <style>
@@ -851,7 +851,7 @@ function bars(rows,color){
 }
 function dual(rows){
  var mx=Math.max.apply(null,rows.map(function(r){return Math.max(r[1],r[2])}).concat([1]));
- return '<div class="lg"><i style="background:var(--ac)"></i>Estimado<i style="background:var(--wa)"></i>Real</div>'+rows.map(function(r){return '<div class="br"><span>'+esc(r[0])+'</span><div class="bar"><i style="width:'+Math.round(r[1]/mx*100)+'%;background:var(--ac)"></i></div><b>'+r[1]+'</b></div><div class="br"><span></span><div class="bar"><i style="width:'+Math.round(r[2]/mx*100)+'%;background:var(--wa)"></i></div><b>'+r[2]+'</b></div>'}).join('')||'<div class="mt">Sin datos en este período.</div>';
+ return '<div class="lg"><i style="background:var(--ac)"></i>Planificado<i style="background:var(--wa)"></i>Realizado</div>'+rows.map(function(r){return '<div class="br"><span>'+esc(r[0])+'</span><div class="bar"><i style="width:'+Math.round(r[1]/mx*100)+'%;background:var(--ac)"></i></div><b>'+r[1]+'</b></div><div class="br"><span></span><div class="bar"><i style="width:'+Math.round(r[2]/mx*100)+'%;background:var(--wa)"></i></div><b>'+r[2]+'</b></div>'}).join('')||'<div class="mt">Sin datos en este período.</div>';
 }
 function renderDash(){
  var ts=tasks.filter(function(t){return inRange(t.fecha||'',$('dPer').value)&&cuenta(t)}),n=ts.length,est=0,rl=0,hecha=0,cnt={},mo={},est_t={},cn={},eq={},mt={},mr={};
@@ -865,7 +865,7 @@ function renderDash(){
   if(t.motivo)mo[t.motivo]=(mo[t.motivo]||0)+1;
  });
  var pc=n?Math.round(hecha/n*100):0,rvd=ts.filter(function(t){return t.rev==='aprobada'||(t.hist&&t.hist.length)}),rh1=function(t){return (t.hist||[]).some(function(x){return x.rev==='rehacer'})},fp=rvd.length?Math.round(rvd.filter(function(t){return t.rev==='aprobada'&&!rh1(t)}).length/rvd.length*100)+'%':'—',rh=ts.filter(rh1).length;
- var kp='<div class="kp"><div><b>'+n+'</b><span>Órdenes de trabajo</span></div><div><b>'+pc+'%</b><span>Realizadas</span></div><div><b>'+est+' min</b><span>Estimados</span></div><div><b>'+rl+' min</b><span>Reales cargados</span></div><div><b>'+fp+'</b><span>Aprobadas a la primera</span></div><div><b>'+rh+'</b><span>Tareas rehechas</span></div></div>';
+ var kp='<div class="kp"><div><b>'+n+'</b><span>Órdenes de trabajo</span></div><div><b>'+pc+'%</b><span>Realizadas</span></div><div><b>'+est+' min</b><span>Planificados</span></div><div><b>'+rl+' min</b><span>Realizados</span></div><div><b>'+fp+'</b><span>Aprobadas a la primera</span></div><div><b>'+rh+'</b><span>Tareas rehechas</span></div></div>';
  var tp=TIPOS.concat(Object.keys(cnt).filter(function(k){return TIPOS.indexOf(k)<0})).filter(function(k){return cnt[k]}).map(function(k){return [k,cnt[k]]});
  var es=Object.keys(EL).map(function(k){return [EL[k],cn[k]||0]});
  var mtr=Object.keys(mt).map(function(k){return [k,mt[k][0],mt[k][1]]});
@@ -903,8 +903,8 @@ function sumF(){var el=$('fSm');if(el)capLine($('fRe').value,$('fFe').value,+$('
 var TC={'Preventivo':'#4FB477','Predictivo':'#4F94E0','Correctivo programado':'#E08A2E','Correctivo no programado':'#E0524A'},SC={pendiente:'#D6B85F',hecha:'#78AD8B',noreal:'#9AA0A8',incompleto:'#D39563'},PC={baja:'#8FB59A',media:'#C9B574',alta:'#D39563',critica:'#D17F78'},SI={pendiente:'M12 7v5l3 2',hecha:'M5 12l5 5 9-10',noreal:'M6 6l12 12M18 6 6 18',incompleto:'M5 12h14'},openD={};
 function chS(c,x,p){return '<span class="tg" style="color:#fff;background:'+c+'55;border-color:'+c+';border-width:2px;font-size:14px;font-weight:800;padding:4px 14px">'+(p?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
 function tmChip(t){var e=mn(t.est),has=t.real!==''&&t.real!=null;if(!has)return chp('#A0A8B1','Plan '+e+' min');var r=mn(t.real),d=r-e;
- if(t.estado==='noreal')return chp('#A0A8B1','Plan '+e+' · Real '+r+' min');
- return chp(d===0?'#78AD8B':d>0?'#D17F78':'#E08A2E','Plan '+e+' · Real '+r+' min'+(d?' ('+(d>0?'+':'−')+Math.abs(d)+')':''))}
+ if(t.estado==='noreal')return chp('#A0A8B1','Planificado '+e+' · Realizado '+r+' min');
+ return chp(d===0?'#78AD8B':d>0?'#D17F78':'#E08A2E','Planificado '+e+' · Realizado '+r+' min'+(d?' ('+(d>0?'+':'−')+Math.abs(d)+')':''))}
 function chp(c,x,p){return '<span class="tg" style="color:'+c+';background:'+c+'26;border-color:'+c+'55">'+(p?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+p+'"/></svg>':'')+esc(x)+'</span>'}
 function aPed(p){return p.n&&!p.ok&&!p.lleg&&(!p.dec||p.dec==='comprar')}
 function pend2(t){var o=[];(t.pedir||[]).forEach(function(p,j){if(p.n&&p.lleg&&!p.inst)o.push(j)});return o}
@@ -968,7 +968,7 @@ function render(){
  var names=RESPONSABLES.concat(me&&me.rol==='supervisor'?['Contratista']:[]);
  $('hf').innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+cb('','Todos')+names.map(function(n){return cb(n,n)}).join('')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">'+tb('dia','Tareas del día',dia.length)+tb('prev','Abiertas de días anteriores',prev.length)+'</div>';
  var L=HOYT==='prev'?prev:dia;
- var rs='';if(HOYT==='dia'&&HOYF&&HOYF!=='Contratista'){var pl=loadMin(HOYF,hs,null),re=loadReal(HOYF,hs),mt=metaFor(HOYF,hs),df=re-pl;rs='<div class="box" style="margin-bottom:10px"><b>'+esc(HOYF)+' · hoy</b><div class="mt" style="margin-top:4px">Planificado <b>'+pl+' min</b> · Real cargado <b>'+re+' min</b>'+(re!==pl?' · diferencia <b style="color:'+(df>0?'#D17F78':'#E08A2E')+'">'+(df>0?'+':'−')+Math.abs(df)+' min</b>':' · coinciden')+' · Meta del día '+mt+' min</div></div>'}
+ var rs='';if(HOYT==='dia'&&HOYF&&HOYF!=='Contratista'){var pl=loadMin(HOYF,hs,null),re=loadReal(HOYF,hs),mt=metaFor(HOYF,hs),df=re-pl;rs='<div class="box" style="margin-bottom:10px"><b>'+esc(HOYF)+' · hoy</b><div class="mt" style="margin-top:4px">Planificado <b>'+pl+' min</b> · Realizado <b>'+re+' min</b>'+(re!==pl?' · diferencia <b style="color:'+(df>0?'#D17F78':'#E08A2E')+'">'+(df>0?'+':'−')+Math.abs(df)+' min</b>':' · coinciden')+' · Meta del día '+mt+' min</div></div>'}
  $('hoy').innerHTML=rs+(L.length?(HOYT==='prev'?'<div class="mt" style="margin-bottom:8px">Tareas que quedaron abiertas. Quien continúe una falla, toca <b>Tomar esta tarea</b>: queda registrado el traspaso.</div>':'')+L.map(cardH).join(''):'<div class="em">'+(HOYT==='prev'?'No hay tareas abiertas de días anteriores.':'No hay tareas para hoy.')+'</div>');
  var f=[$('fT').value,$('fE').value,$('fU').value,$('fD').value,$('fY').value,$('fK').value,$('fW').value,$('fR').value],nf=f.filter(Boolean).length,q=$('fQ').value.trim().toLowerCase(),qd=q.replace(/^ot[-\s]*/,'');
  $('fN').textContent='Filtros'+(nf?' ('+nf+')':'');
@@ -1206,7 +1206,7 @@ function renderInd(){
  +cd('Planificado vs no planificado',[rw('Planificadas',(n-np)+' ('+pct(n-np,n)+')'),rw('Correctivos no programados',np+' ('+pct(np,n)+')')])
  +cd('Cumplimiento del preventivo',[rw('Preventivos realizados',pvh+' de '+pv+' ('+pct(pvh,pv)+')')])
  +cd('Incompletas',[rw('Retomadas por otro técnico',ret),rw('Sin tomar (cerradas)',stm)])
- +cd('Uso de la carga horaria',[rw('Estimado',est+' min'),rw('Real cargado',real+' min'),rw('Meta de carga',meta+' min'),rw('Real sobre meta',pct(real,meta))])
+ +cd('Uso de la carga horaria',[rw('Planificado',est+' min'),rw('Realizado',real+' min'),rw('Meta de carga',meta+' min'),rw('Real sobre meta',pct(real,meta))])
  +cd('Fallas y criticidad',[rw('Correctivos no programados',np),rw('Críticas / altas',(pr.critica||0)+' / '+(pr.alta||0)),rw('Equipos con más fallas',top)])
  +cd('Repuestos y pedidos',[rw('Repuestos usados',usd),rw('Repuestos a pedir cargados',rep_),rw('Pedidos generados',pd)])
  +cd('Relatos y notas',[rw('Relatos de anomalía',rl),rw('Notas de cambio de turno',nt.length),rw('Notas que requieren atención',nta)]);
